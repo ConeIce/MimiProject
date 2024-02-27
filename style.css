@@ -1,0 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Ubuntu", sans-serif;
+  display: grid;
+  place-items: center;
+}
+
+input {
+  padding: 13px 20px;
+  border: none;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  width: 300px;
+}
+
+form {
+  display: grid;
+  place-items: center;
+  gap: 20px;
+  width: 300px;
+  margin-top: 40px;
+}
+
+h1 {
+  justify-self: left;
+  font-size: 26px;
+  margin-bottom: 12px;
+}
+
+a {
+  color: #3283fd;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #1e77fd;
+  text-decoration: underline;
+}
+a.primary-btn {
+  color: #fff;
+  text-decoration: none;
+}
+
+.right-align {
+  justify-self: right;
+}
+
+.primary-btn {
+  padding: 13px 20px;
+  border: none;
+  background-color: #4dcbdc;
+  border-radius: 5px;
+  color: #fff;
+  text-decoration: none;
+  font-style: bold;
+  width: 300px;
+  margin-bottom: ;
+  text-align: center;
+}
+
+p a {
+  margin-left: 5px;
+}
+
+.subtitle {
+  font-weight: 300;
+}
