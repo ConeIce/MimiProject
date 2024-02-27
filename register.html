@@ -17,9 +17,42 @@
 
       <input type="password" placeholder="Password" />
 
-      <a class="primary-btn" href="#">Create Account</a>
+      <button type="submit" class="primary-btn" href="#">Create Account</button>
 
       <p>Already have an account? <a href="./login.html">Sign in</a></p>
     </form>
   </body>
+
+  <script>
+    document.querySelector("form").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const username = document.querySelector('input[type="text"]').value;
+      const email = document.querySelector('input[type="email"]').value;
+      const password = document.querySelector('input[type="password"]').value;
+
+      const userData = {
+        username: username,
+        email: email,
+        password: password,
+      };
+
+      console.log(userData);
+
+      fetch("http://localhost:3000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  </script>
 </html>
