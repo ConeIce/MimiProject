@@ -8,16 +8,28 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Create a new SQLite database
 const db = new sqlite3.Database("database.db");
 
 app.post("/login", (req, res) => {
+  console.log("reached");
   const { username, password } = req.body;
-  res.send("Login route");
+  db.get(
+    "SELECT * FROM users WHERE username = ? AND password = ?",
+    [username, password],
+    (err, row) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error retrieving user data");
+      } else if (row) {
+        res.send({ status: true });
+      } else {
+        res.send({ status: false });
+      }
+    }
+  );
 });
 
 app.post("/register", (req, res) => {
-  console.log("Reached");
   const { username, password, email } = req.body;
 
   db.run(

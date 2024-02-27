@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <form action="">
+    <form>
       <h1>Welcome back!</h1>
 
       <input type="text" placeholder="Username" />
@@ -17,9 +17,48 @@
 
       <a href="./forgot.html" class="right-align">Forgot password?</a>
 
-      <a href="#" class="primary-btn">Login</a>
+      <button type="submit" class="primary-btn">Login</button>
 
       <p>Don't you have an account?<a href="./register.html">Sign Up</a></p>
     </form>
+
+    <script>
+      document
+        .querySelector("form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const username = document.querySelector('input[type="text"]').value;
+          const password = document.querySelector(
+            'input[type="password"]'
+          ).value;
+
+          const userData = {
+            username: username,
+            password: password,
+          };
+
+          console.log(userData);
+
+          fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userData),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status) {
+                window.location.href = "./dashboard.html";
+              } else {
+                alert("Invalid username or password");
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        });
+    </script>
   </body>
 </html>
