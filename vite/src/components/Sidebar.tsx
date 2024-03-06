@@ -1,28 +1,28 @@
-import { LayoutDashboard, Mail, Printer, Settings, User } from "lucide-react";
+import { LayoutDashboard, Printer, Settings, User } from "lucide-react";
 import { Button } from "./ui/button";
 
 export default function Sidebar() {
   return (
-    <div className="border-r-2 h-screen">
-      <h1 className="text-2xl">PrintConnect</h1>
+    <div className="border-r-2 h-screen p-8">
+      <h1 className="text-2xl font-bold mb-5">PrintConnect</h1>
 
-      <h3>Menu</h3>
+      <h3 className="font-bold mb-3">Menu</h3>
 
-      <Button>
+      <Button variant="ghost" className="w-full mb-2 justify-start">
         <Printer className="mr-2 h-4 w-4" /> Print
       </Button>
-      <Button>
+      <Button variant="ghost" className="w-full mb-2 justify-start">
         <LayoutDashboard className="mr-2 h-4 w-4" />
         Dashboard
       </Button>
 
-      <h3>Others</h3>
+      <h3 className="font-bold mb-3">Others</h3>
 
-      <Button>
+      <Button variant="ghost" className="w-full mb-2 justify-start">
         <Settings className="mr-2 h-4 w-4" />
         Settings
       </Button>
-      <Button>
+      <Button variant="ghost" className="w-full mb-2 justify-start">
         <User className="mr-2 h-4 w-4" />
         Profile
       </Button>
