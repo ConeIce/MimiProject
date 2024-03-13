@@ -125,13 +125,27 @@ export default function PrintPage() {
         <p>Select Orientation</p>
         <Select>
           <SelectTrigger className="w-[180px] mb-5 mt-1">
-            <SelectValue placeholder="Select a size" />
+            <SelectValue placeholder="Select orientation" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Orientation</SelectLabel>
               <SelectItem value="Kanjirapally">Portrait</SelectItem>
               <SelectItem value="Koovalappy">Landscape</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <p>Colour</p>
+        <Select>
+          <SelectTrigger className="w-[180px] mb-5 mt-1">
+            <SelectValue placeholder="Select a color" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Color</SelectLabel>
+              <SelectItem value="Kanjirapally">Yes</SelectItem>
+              <SelectItem value="Koovalappy">No</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
