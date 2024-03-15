@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import {
   Select,
   SelectContent,
@@ -21,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
@@ -29,8 +31,8 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 
 import { getPagesFromRange } from "@/utils/getPagesFromRange";
-import { useState } from "react";
-import console from "console";
+import { useEffect, useState } from "react";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -47,6 +49,8 @@ const FormSchema = z.object({
   pages: z.string().optional(),
   copies: z.coerce.number().min(1),
 });
+
+let INITIAL_NUMBER_OF_PAGES: number;
 
 export default function PrintPage() {
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -72,25 +76,64 @@ export default function PrintPage() {
     setFormData(data);
     console.log(data);
     const pages = getPagesFromRange(data.pages);
-    console.log(pages);
   }
 
   const [numPages, setNumPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
+  const [secondPageNumber, setSecondPageNumber] = useState<number>(2);
+
+  const [customPages, setCustomPages] = useState<number[]>([]);
+
+  const [currIndex, setCurrIndex] = useState<number>(0);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+    INITIAL_NUMBER_OF_PAGES = numPages;
     setNumPages(numPages);
   }
 
   function handleNext() {
-    setPageNumber((prev) => prev + 2);
+    if (customPages.length) {
+      if (currIndex + 2 >= numPages) return;
+
+      setCurrIndex((prev) => prev + 2);
+    }
+
+    if (currentPageNumber + 1 === numPages) return;
+
+    setCurrentPageNumber((prev) => prev + 2);
+    setSecondPageNumber((prev) => prev + 2);
   }
 
   function handlePrev() {
-    if (pageNumber === 1) return;
+    if (customPages.length) {
+      if (currIndex - 2 < 0) return;
 
-    setPageNumber((prev) => prev - 2);
+      setCurrIndex((prev) => prev - 2);
+    }
+
+    if (currentPageNumber === 1) return;
+
+    setCurrentPageNumber((prev) => prev - 2);
+    setSecondPageNumber((prev) => prev - 2);
   }
+
+  function handlePageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setCustomPages(getPagesFromRange(event.target.value));
+  }
+
+  useEffect(() => {
+    if (!customPages.length) {
+      console.log("here");
+      setCurrentPageNumber(1);
+      setSecondPageNumber(2);
+      setNumPages(INITIAL_NUMBER_OF_PAGES);
+      return;
+    }
+
+    setCurrentPageNumber(customPages[currIndex]);
+    setSecondPageNumber(customPages[currIndex + 1]);
+    setNumPages(customPages.length);
+  }, [customPages, currIndex]);
 
   return (
     <>
@@ -247,6 +290,7 @@ export default function PrintPage() {
                       className="mb-5 mt-1"
                       placeholder="Comma separated pages or range or both"
                       {...field}
+                      onChange={handlePageChange}
                     />
                     <FormDescription>
                       Leave blank to print all pages
@@ -304,7 +348,7 @@ export default function PrintPage() {
                 <span className="mx-6">
                   Page{" "}
                   <Badge className="mx-3">
-                    {pageNumber}, {pageNumber + 1}
+                    {currentPageNumber}, {secondPageNumber}
                   </Badge>
                   of
                   <Badge className="ml-3">{numPages}</Badge>
@@ -316,14 +360,14 @@ export default function PrintPage() {
 
               <div className="mt-8 flex gap-4">
                 <Page
-                  pageNumber={pageNumber}
+                  pageNumber={currentPageNumber}
                   className="border-2 drop-shadow-sm"
                   width={250}
                   renderAnnotationLayer={false}
                   renderTextLayer={false}
                 />
                 <Page
-                  pageNumber={pageNumber + 1}
+                  pageNumber={secondPageNumber}
                   className="border-2 drop-shadow-sm"
                   renderAnnotationLayer={false}
                   renderTextLayer={false}
