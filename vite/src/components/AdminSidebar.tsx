@@ -18,7 +18,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { DropdownMenuShortcut } from "./ui/dropdown-menu";
 
 export default function AdminSidebar() {
   return (
@@ -53,30 +52,19 @@ export default function AdminSidebar() {
 
       <h3 className="mb-3">Menu</h3>
 
-      <Link to="/dashboard/print">
+      <Link to="/admin-dashboard/print">
         <Button variant="ghost" className="w-full mb-2 justify-start">
           <Printer className="mr-2 h-4 w-4" />
-          Print
+          Print Queue
         </Button>
       </Link>
 
-      <Link to="/dashboard/all">
+      <Link to="/admin-dashboard">
         <Button variant="ghost" className="w-full mb-4 justify-start">
           <LayoutDashboard className="mr-2 h-4 w-4" />
           Dashboard
         </Button>
       </Link>
-
-      <h3 className="mb-3">Others</h3>
-
-      <Button variant="ghost" className="w-full mb-2 justify-start">
-        <Settings className="mr-2 h-4 w-4" />
-        Settings
-      </Button>
-      <Button variant="ghost" className="w-full mb-2 justify-start">
-        <User className="mr-2 h-4 w-4" />
-        Profile
-      </Button>
     </div>
   );
 }

@@ -13,6 +13,8 @@ import RegisterPage from "./pages/Authentication/RegisterPage.tsx";
 import AllPrintsPage from "./pages/Dashboard/AllPrintsPage.tsx";
 import AdminLogin from "./pages/Authentication/AdminAuth/AdminLogin.tsx";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard.tsx";
+import PrintQueue from "./pages/AdminDashboard/PrintQueue.tsx";
+import Dashboard from "./pages/AdminDashboard/Dashboard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +51,17 @@ const router = createBrowserRouter([
   {
     path: "/admin-dashboard",
     element: <AdminDashboard />,
+
+    children: [
+      {
+        path: "print",
+        element: <PrintQueue />,
+      },
+      {
+        path: "",
+        element: <Dashboard />,
+      },
+    ],
   },
 ]);
 
