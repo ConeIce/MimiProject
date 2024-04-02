@@ -73,9 +73,32 @@ export default function PrintPage() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    setFormData(data);
-    console.log(data);
-    const pages = getPagesFromRange(data.pages);
+    const formData = new FormData();
+
+    if (data.file) {
+      formData.append("file", data.file);
+    }
+
+    console.log(formData);
+
+    formData.append("shopName", data.shopName);
+    formData.append("paperSize", data.paperSize);
+    formData.append("orientation", data.orientation);
+    formData.append("color", String(data.color));
+    formData.append("pages", data.pages || "");
+    formData.append("copies", String(data.copies));
+
+    fetch("http://localhost:3000/submitPrint", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Response from server:", data);
+      })
+      .catch((error) => {
+        console.error("Error submitting form:", error);
+      });
   }
 
   const [numPages, setNumPages] = useState<number>();
