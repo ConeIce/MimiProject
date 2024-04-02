@@ -123,7 +123,6 @@ export default function PrintPage() {
 
   useEffect(() => {
     if (!customPages.length) {
-      console.log("here");
       setCurrentPageNumber(1);
       setSecondPageNumber(2);
       setNumPages(INITIAL_NUMBER_OF_PAGES);

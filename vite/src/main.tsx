@@ -4,12 +4,15 @@ import ReactDOM from "react-dom/client";
 import "../app/globals.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import DashboardPage from "./pages/Dashboard/DashboardPage.tsx";
 import PrintPage from "./pages/Dashboard/PrintPage.tsx";
 import ForgotPage from "./pages/Authentication/ForgotPage.tsx";
 import LoginPage from "./pages/Authentication/LoginPage.tsx";
 import RegisterPage from "./pages/Authentication/RegisterPage.tsx";
 import AllPrintsPage from "./pages/Dashboard/AllPrintsPage.tsx";
+import AdminLogin from "./pages/Authentication/AdminAuth/AdminLogin.tsx";
+import AdminDashboard from "./pages/AdminDashboard/AdminDashboard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +28,10 @@ const router = createBrowserRouter([
     element: <ForgotPage />,
   },
   {
+    path: "admin-login",
+    element: <AdminLogin />,
+  },
+  {
     path: "/dashboard",
     element: <DashboardPage />,
     children: [
@@ -37,6 +44,11 @@ const router = createBrowserRouter([
         element: <AllPrintsPage />,
       },
     ],
+  },
+
+  {
+    path: "/admin-dashboard",
+    element: <AdminDashboard />,
   },
 ]);
 
