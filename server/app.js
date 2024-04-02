@@ -11,19 +11,6 @@ app.use(express.json());
 
 const db = new sqlite3.Database("database.db");
 
-// db.serialize(() => {
-//   db.run(`CREATE TABLE IF NOT EXISTS files (
-//     id INTEGER PRIMARY KEY AUTOINCREMENT,
-//     shop TEXT,
-//     size TEXT,
-//     orientation TEXT,
-//     pages INTEGER,
-//     copies INTEGER,
-//     filename TEXT,
-//     file BLOB
-//   )`);
-// });
-
 app.post("/login", (req, res) => {
   console.log("reached");
   const { username, password } = req.body;
