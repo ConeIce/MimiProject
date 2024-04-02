@@ -11,24 +11,24 @@ app.use(express.json());
 
 const db = new sqlite3.Database("database.db");
 
-db.serialize(() => {
-  db.run(`CREATE TABLE IF NOT EXISTS files (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    shop TEXT,
-    size TEXT,
-    orientation TEXT,
-    pages INTEGER,
-    copies INTEGER,
-    filename TEXT,
-    file BLOB
-  )`);
-});
+// db.serialize(() => {
+//   db.run(`CREATE TABLE IF NOT EXISTS files (
+//     id INTEGER PRIMARY KEY AUTOINCREMENT,
+//     shop TEXT,
+//     size TEXT,
+//     orientation TEXT,
+//     pages INTEGER,
+//     copies INTEGER,
+//     filename TEXT,
+//     file BLOB
+//   )`);
+// });
 
 app.post("/login", (req, res) => {
   console.log("reached");
   const { username, password } = req.body;
   db.get(
-    "SELECT * FROM users WHERE username = ? AND password = ?",
+    "SELECT * FROM users WHERE username = ? AND password = ?", // TODO: check if user has the default role
     [username, password],
     (err, row) => {
       if (err) {
@@ -47,7 +47,7 @@ app.post("/register", (req, res) => {
   const { username, password, email } = req.body;
 
   db.run(
-    "INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
+    "INSERT INTO users (username, password, email) VALUES (?, ?, ?)", // TODO: integrate ROLES. either default/admin supplied from fronted
     [username, password, email],
     (err) => {
       if (err) {

@@ -18,13 +18,13 @@ export default function Dashboard() {
       <h1 className="text-2xl mt-8">Shop summary</h1>
 
       <div className="flex gap-8">
-        <div className="bg-black text-white text-2xl font-bold p-8 rounded-md">
+        <div className="bg-black text-white text-2xl font-bold p-8 rounded-md   ">
           45 Total Prints
         </div>
-        <div className="bg-black text-white text-2xl font-bold p-8 rounded-md">
+        <div className="bg-black text-white text-2xl font-bold p-8 rounded-md   ">
           35 Prints Pending
         </div>
-        <div className="bg-black text-white text-2xl font-bold p-8 rounded-md">
+        <div className="bg-black text-white text-2xl font-bold p-8 rounded-md   ">
           $3000 in Profits
         </div>
       </div>
