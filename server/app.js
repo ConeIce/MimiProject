@@ -1,51 +1,41 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const sqlite3 = require("sqlite3").verbose();
+const session = require("express-session");
+const sqlite = require("better-sqlite3");
+const SqliteStore = require("better-sqlite3-session-store")(session);
+const sessionsDB = new sqlite("sessions.db");
 const upload = require("./mult");
+const AuthRoute = require("./routes/auth.js");
+const passport = require("passport");
+const passportLocal = require("passport-local");
 
 app.use(cors());
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-const db = new sqlite3.Database("database.db");
+const db = new sqlite("./database.db");
 
-app.post("/login", (req, res) => {
-  console.log("reached");
-  const { username, password } = req.body;
-  db.get(
-    "SELECT * FROM users WHERE username = ? AND password = ?", // TODO: check if user has the default role
-    [username, password],
-    (err, row) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Error retrieving user data");
-      } else if (row) {
-        res.send({ status: true });
-      } else {
-        res.send({ status: false });
-      }
-    }
-  );
-});
+app.use(
+  session({
+    proxy: process.env.ENV === "production",
+    store: new SqliteStore({
+      client: sessionsDB,
+    }),
+    secret: process.env.SECRET || "bigboysecurity",
+    resave: true,
+    saveUninitialized: false,
+    cookie: {},
+  })
+);
 
-app.post("/register", (req, res) => {
-  const { username, password, email } = req.body;
+app.use(passport.initialize());
+app.use(passport.session());
+const passportConfig = require("./passportConfig.js");
+passportConfig(passport);
 
-  db.run(
-    "INSERT INTO users (username, password, email) VALUES (?, ?, ?)", // TODO: integrate ROLES. either default/admin supplied from fronted
-    [username, password, email],
-    (err) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Error saving user data");
-      } else {
-        res.send("User registered successfully");
-      }
-    }
-  );
-});
+app.use("/auth", AuthRoute);
 
 app.post("/submitPrint", upload.single("file"), (req, res) => {
   const { shop, size, orientation, pages, copies } = req.body;
