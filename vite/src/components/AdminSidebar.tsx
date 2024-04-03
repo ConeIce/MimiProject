@@ -21,19 +21,58 @@ import {
 
 export default function AdminSidebar() {
   return (
-    <div className="border-r h-screen">
-      <div className="flex justify-between items-center border-b-2 p-2 px-8">
-        <Avatar className="mr-4">
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+    <div className="border-r h-screen pb-4 w-[350px] relative">
+      <h1 className="px-8 py-6 text-2xl bg-black text-white font-light">
+        Admin Dashboard
+      </h1>
 
-        <span className="mr-8">John Doe</span>
+      <div className="px-8">
+        <h3 className="text-xl mt-8 mb-8">Menu</h3>
+
+        <Link to="/admin-dashboard">
+          <Button
+            variant="ghost"
+            className="w-full mb-4 justify-start hover:bg-white"
+          >
+            <div className="bg-black mr-5 p-2 rounded-md">
+              <LayoutDashboard className=" h-4 w-4 text-white" />
+            </div>
+            Dashboard
+          </Button>
+        </Link>
+
+        <Link to="/admin-dashboard/print">
+          <Button
+            variant="ghost"
+            className="w-full mb-4 justify-start hover:bg-white"
+          >
+            <div className="bg-black mr-5 p-2 rounded-md">
+              <Printer className="h-4 w-4 text-white" />
+            </div>
+            Print Queue
+          </Button>
+        </Link>
+
+        <Link to="/admin-dashboard/print">
+          <Button
+            variant="ghost"
+            className="w-full mb-4 justify-start hover:bg-white"
+          >
+            <div className="bg-black mr-5 p-2 rounded-md">
+              <Printer className="h-4 w-4 text-white" />
+            </div>
+            Available Printers
+          </Button>
+        </Link>
+      </div>
+
+      <div className="w-full flex px-8 py-3 justify-between items-center absolute bottom-0 bg-green bg-pixel bg-center bg-cover">
+        <span className="mr-8 font-semibold text-white">John Doe</span>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="icon">
-              <ChevronDown />
+              <ChevronDown className="text-white" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
@@ -49,22 +88,6 @@ export default function AdminSidebar() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
-      <h3 className="mb-3">Menu</h3>
-
-      <Link to="/admin-dashboard/print">
-        <Button variant="ghost" className="w-full mb-2 justify-start">
-          <Printer className="mr-2 h-4 w-4" />
-          Print Queue
-        </Button>
-      </Link>
-
-      <Link to="/admin-dashboard">
-        <Button variant="ghost" className="w-full mb-4 justify-start">
-          <LayoutDashboard className="mr-2 h-4 w-4" />
-          Dashboard
-        </Button>
-      </Link>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 
 export default function Dashboard() {
   return (
-    <div className="p-8">
+    <div className="p-10 px-16 w-full">
       <h1 className="text-2xl">Shop Settings</h1>
 
       <div>

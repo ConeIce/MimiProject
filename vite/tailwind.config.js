@@ -20,6 +20,7 @@ module.exports = {
       backgroundImage: {
         login:
           "url('https://images.pexels.com/photos/2832382/pexels-photo-2832382.jpeg')",
+        pixel: "url('./src/assets/bg-pixel.jpg')",
       },
       colors: {
         border: "hsl(var(--border))",
