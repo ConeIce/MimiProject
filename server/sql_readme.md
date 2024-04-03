@@ -13,4 +13,9 @@ Now to setup the database
 2. .open <path-to-database.db> <!-- Name of db should be database.db -->
 3. .read <path-to-db.sql> <!-- SQL File is in the server folder -->
 
+Alternatively, if SQLite3 command is added to path
+
+0. Delete database.db
+1. sqlite3 database.db ".read db.sql"
+
 Should be set to use.
