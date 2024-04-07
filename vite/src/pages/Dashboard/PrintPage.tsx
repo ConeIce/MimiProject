@@ -76,6 +76,8 @@ export default function PrintPage() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const formData = new FormData();
 
+    console.log(data);
+
     if (data.file) {
       formData.append("file", data.file);
     }
@@ -90,17 +92,12 @@ export default function PrintPage() {
     formData.append("copies", String(data.copies));
 
     try {
+      console.log("Sending form data:", formData);
       const response = await axios.post(
         "http://localhost:3000/dash/submitPrint",
-        {
-          formData,
-        },
+        formData,
         {
           withCredentials: true,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json",
-          },
         }
       );
       console.log(response.data);

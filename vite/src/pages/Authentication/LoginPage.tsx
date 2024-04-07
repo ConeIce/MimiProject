@@ -27,10 +27,16 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/auth/login", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:3000/auth/login",
+        {
+          username,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       console.log(response.data);
       navigate("/dashboard/print");
     } catch (error) {

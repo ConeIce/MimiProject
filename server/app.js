@@ -18,6 +18,7 @@ const isLoggedIn = require("./middleware/isLoggedIn.js");
 const corsOptions = {
   origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -31,14 +32,13 @@ app.use(cookieParser("bigboysecurity"));
 
 app.use(
   session({
-    proxy: process.env.ENV === "production",
+    // proxy: process.env.ENV === "production",
     store: new SqliteStore({
       client: sessionsDB,
     }),
     secret: process.env.SECRET || "bigboysecurity",
     resave: true,
     saveUninitialized: false,
-    cookie: {},
   })
 );
 
