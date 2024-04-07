@@ -13,7 +13,7 @@ module.exports = {
   login: (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) throw err;
-      if (!user) res.status(400).send("No User Exists");
+      if (!user) res.status(400).send("No User Exists or password is wrong");
       else {
         req.logIn(user, (err) => {
           if (err) throw err;

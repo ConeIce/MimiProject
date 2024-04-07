@@ -94,6 +94,13 @@ export default function PrintPage() {
         "http://localhost:3000/dash/submitPrint",
         {
           formData,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
         }
       );
       console.log(response.data);

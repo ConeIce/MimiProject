@@ -34,10 +34,16 @@ module.exports = function (passport) {
   );
 
   passport.serializeUser(function (user, done) {
-    done(null, user);
+    done(null, user.user_id);
   });
 
-  passport.deserializeUser(function (user, done) {
+  passport.deserializeUser(function (id, done) {
+    const user = db
+      .prepare("SELECT user_id, username FROM users WHERE user_id = ?")
+      .get(id);
+
+    console.log(user);
+
     done(null, user);
   });
 };

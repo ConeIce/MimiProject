@@ -11,6 +11,10 @@ const DashboardRoute = require("./routes/dashboard.js");
 const passport = require("passport");
 const passportLocal = require("passport-local");
 
+const cookieParser = require("cookie-parser");
+
+const isLoggedIn = require("./middleware/isLoggedIn.js");
+
 const corsOptions = {
   origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
@@ -22,6 +26,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 const db = new sqlite("./database.db");
+
+app.use(cookieParser("bigboysecurity"));
 
 app.use(
   session({
@@ -42,7 +48,7 @@ const passportConfig = require("./passportConfig.js");
 passportConfig(passport);
 
 app.use("/auth", AuthRoute);
-app.use("/dash", DashboardRoute);
+app.use("/dash", isLoggedIn, DashboardRoute);
 
 app.post("/forgot-password", (req, res) => {
   const { email } = req.body;

@@ -6,6 +6,8 @@ const db = new sqlite("./database.db");
 
 module.exports = {
   submitPrint: (req, res) => {
+    console.log(req.user);
+
     passport.authenticate("local", (err, user, info) => {
       if (err) throw err;
       if (!user) res.status(400).send("No User Exists");
