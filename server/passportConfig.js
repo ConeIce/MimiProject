@@ -8,6 +8,10 @@ const db = new sqlite("./database.db");
 module.exports = function (passport) {
   passport.use(
     new localStrategy((username, password, done) => {
+      if (!username || !password) {
+        return res.status(400).send("Username and password are required");
+      }
+
       const user = db
         .prepare("SELECT * FROM users WHERE username = ?")
         .get(username);

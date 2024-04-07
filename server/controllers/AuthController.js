@@ -11,10 +11,6 @@ const validateEmail = (email) => {
 
 module.exports = {
   login: (req, res, next) => {
-    if (!username || !password) {
-      return res.status(400).send("Username and password are required");
-    }
-
     passport.authenticate("local", (err, user, info) => {
       if (err) throw err;
       if (!user) res.status(400).send("No User Exists");
