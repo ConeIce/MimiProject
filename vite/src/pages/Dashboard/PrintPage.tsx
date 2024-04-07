@@ -36,6 +36,9 @@ import { useEffect, useState } from "react";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
@@ -47,13 +50,15 @@ const FormSchema = z.object({
   orientation: z.string(),
   file: z.union([z.instanceof(File), z.undefined()]),
   color: z.boolean(),
-  pageRange: z.string(),
+  pageRange: z.string().optional(),
   copies: z.coerce.number().min(1),
 });
 
 let INITIAL_NUMBER_OF_PAGES: number;
 
 export default function PrintPage() {
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -100,7 +105,11 @@ export default function PrintPage() {
           withCredentials: true,
         }
       );
-      console.log(response.data);
+
+      toast({
+        title: "Print submitted successfully",
+        description: response.data.message,
+      });
     } catch (error) {
       console.error("Error sending form in:", error);
     }
@@ -164,7 +173,7 @@ export default function PrintPage() {
 
   return (
     <>
-      {" "}
+      <Toaster />
       <div className="p-8">
         <h2 className="text-3xl mb-8">Take a print</h2>
         <Form {...form}>
