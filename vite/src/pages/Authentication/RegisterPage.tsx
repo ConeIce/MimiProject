@@ -2,11 +2,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios"; // You may need to install axios: npm install axios
 import "./authentication.css";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { toast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,9 +21,15 @@ export default function RegisterPage() {
         email,
         password,
       });
-      console.log(response.data);
     } catch (error) {
-      console.error("Error registering:", error);
+      if (error.response) {
+        if (error.response.status === 400) {
+          toast({
+            title: "Oops. Error 400.",
+            description: error.response.data,
+          });
+        }
+      }
     }
   };
 
@@ -63,6 +73,7 @@ export default function RegisterPage() {
       <p>
         Already have an account? <Link to="/">Sign in</Link>
       </p>
+      <Toaster />
     </div>
   );
 }
