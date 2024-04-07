@@ -1,9 +1,10 @@
 const express = require("express");
 const controller = require("../controllers/DashboardController.js");
+const upload = require("../mult.js");
 
 const router = express.Router();
 
-router.post("/submitPrint", (req, res) => {
+router.post("/submitPrint", upload.single("file"), (req, res) => {
   controller.submitPrint(req, res);
 });
 

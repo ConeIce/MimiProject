@@ -6,12 +6,12 @@ const db = new sqlite("./database.db");
 
 module.exports = {
   submitPrint: (req, res) => {
-    // console.log(req.user);
+    const user = req.user;
 
-    const { shopName, paperSize, orientation, pages, copies } = req.body;
+    const { shopName, paperSize, orientation, pageRange, copies } = req.body;
     const file = req.file;
 
-    console.log(shopName, paperSize);
+    console.log("PageRange", pageRange);
 
     if (!shopName || !paperSize || !orientation || !copies || !file) {
       return res.status(400).json({
@@ -20,7 +20,7 @@ module.exports = {
     }
 
     const insertStmt = db.prepare(
-      "INSERT INTO files (shop, size, orientation, pages, copies, filename, file, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+      "INSERT INTO files (shop, size, orientation, pageRange, copies, filename, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
     );
 
     try {
@@ -28,10 +28,9 @@ module.exports = {
         shopName,
         paperSize,
         orientation,
-        parseInt(pages),
+        pageRange,
         parseInt(copies),
         file.originalname,
-        file.buffer,
         user.user_id
       );
 
@@ -39,7 +38,7 @@ module.exports = {
         console.log(
           `A row has been inserted with rowid ${result.lastInsertRowid}`
         );
-        res.status(200).json({ message: "File uploaded successfully" });
+        res.json({ message: "File uploaded successfully" });
       } else {
         console.error("Failed to insert file");
         res.status(500).json({ message: "Failed to upload file" });
@@ -49,6 +48,7 @@ module.exports = {
       res.status(500).json({ message: "Error uploading file" });
     }
   },
+
   getFiles: (req, res) => {
     db.all("SELECT * FROM files", (err, rows) => {
       if (err) {

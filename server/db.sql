@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS shops (
 CREATE TABLE IF NOT EXISTS files (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     shop TEXT, -- we need to remove this and use shop_id. Need to make related changes in both server and frontend
-	user_id INTEGER, -- ID of user who submitted the print, should be retrieved from passport ig
+	user_id INTEGER NOT NULL, -- ID of user who submitted the print, should be retrieved from passport ig
 	shop_id INTEGER,
 
     size TEXT NOT NULL, -- A3, A4 ...
@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS files (
 	pageRange TEXT NOT NULL, 
     copies INTEGER NOT NULL,
     filename TEXT NOT NULL,
-    file BLOB,
 	done BOOLEAN DEFAULT 0,
 	
 	FOREIGN KEY(shop_id) REFERENCES shops(shop_id),

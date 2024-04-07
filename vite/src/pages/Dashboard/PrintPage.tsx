@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
 
@@ -47,7 +47,7 @@ const FormSchema = z.object({
   orientation: z.string(),
   file: z.union([z.instanceof(File), z.undefined()]),
   color: z.boolean(),
-  pages: z.string().optional(),
+  pageRange: z.string(),
   copies: z.coerce.number().min(1),
 });
 
@@ -69,7 +69,7 @@ export default function PrintPage() {
     orientation: "Portrait",
     file: undefined,
     color: false,
-    pages: "",
+    pageRange: "",
     copies: 1,
   });
 
@@ -88,7 +88,7 @@ export default function PrintPage() {
     formData.append("paperSize", data.paperSize);
     formData.append("orientation", data.orientation);
     formData.append("color", String(data.color));
-    formData.append("pages", data.pages || "");
+    formData.append("pageRange", data.pageRange || "");
     formData.append("copies", String(data.copies));
 
     try {
@@ -309,15 +309,18 @@ export default function PrintPage() {
 
               <FormField
                 control={form.control}
-                name="pages"
+                name="pageRange"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Pages</FormLabel>
+                    <FormLabel>Page Range</FormLabel>
                     <Input
                       className="mb-5 mt-1"
                       placeholder="Comma separated pages or range or both"
                       {...field}
-                      onChange={handlePageChange}
+                      onChange={(event) => {
+                        field.onChange(event.target.value);
+                        handlePageChange(event);
+                      }}
                     />
                     <FormDescription>
                       Leave blank to print all pages
