@@ -49,7 +49,8 @@ module.exports = {
       .get(username);
 
     if (existingUser) {
-      res.send("User Already Exists");
+      console.log("Here");
+      res.status(400).send("User Already Exists");
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
 

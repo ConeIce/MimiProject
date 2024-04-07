@@ -11,22 +11,12 @@ const DashboardRoute = require("./routes/dashboard.js");
 const passport = require("passport");
 const passportLocal = require("passport-local");
 
-<<<<<<< HEAD
-const { createServer } = require("node:http");
-const server = createServer(app);
-
-const { Server } = require("socket.io");
-const io = new Server(server);
-
-app.use(cors());
-=======
 const corsOptions = {
   origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
->>>>>>> b61374032d03ee67454082c3a41f0bd527123e8d
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

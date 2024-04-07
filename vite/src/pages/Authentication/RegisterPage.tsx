@@ -21,11 +21,23 @@ export default function RegisterPage() {
         email,
         password,
       });
+
+      toast({
+        title: "Registration successful",
+        description: `Welcome ${username}`,
+      });
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
           toast({
             title: "Oops. Error 400.",
+            description: error.response.data,
+          });
+        }
+
+        if (error.response.status === 500) {
+          toast({
+            title: "Oops. Error 500. Not your fault",
             description: error.response.data,
           });
         }
