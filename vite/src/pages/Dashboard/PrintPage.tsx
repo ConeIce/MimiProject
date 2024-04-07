@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { set, useForm } from "react-hook-form";
 import { z } from "zod";
+import axios from "axios";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -72,7 +73,7 @@ export default function PrintPage() {
     copies: 1,
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     const formData = new FormData();
 
     if (data.file) {
@@ -88,17 +89,17 @@ export default function PrintPage() {
     formData.append("pages", data.pages || "");
     formData.append("copies", String(data.copies));
 
-    fetch("http://localhost:3000/submitPrint", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Response from server:", data);
-      })
-      .catch((error) => {
-        console.error("Error submitting form:", error);
-      });
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/dash/submitPrint",
+        {
+          formData,
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error sending form in:", error);
+    }
   }
 
   const [numPages, setNumPages] = useState<number>();

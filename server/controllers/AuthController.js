@@ -4,6 +4,11 @@ const passport = require("passport");
 
 const db = new sqlite("./database.db");
 
+const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 module.exports = {
   login: (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
@@ -25,28 +30,43 @@ module.exports = {
     const password = req.body.password;
     const role = req.body.role || "user";
 
-    db.get(
-      "SELECT * FROM users WHERE username = ?",
-      [username],
-      async (err, row) => {
-        if (err) throw err;
-        if (row) res.send("User Already Exists");
-        else {
-          const hashedPassword = await bcrypt.hash(password, 10);
+    if (!username || !email || !password) {
+      return res.status(400).send("Username, email, and password are required");
+    }
 
-          db.run(
-            "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)",
-            [username, email, hashedPassword, role],
-            function (err) {
-              if (err) {
-                return console.log(err.message);
-              }
-              console.log(`A row has been inserted with rowid ${this.lastID}`);
-              res.send("User Created");
-            }
-          );
-        }
+    if (!validateEmail(email)) {
+      return res.status(400).send("Invalid email address");
+    }
+
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .send("Password must be at least 6 characters long");
+    }
+
+    const existingUser = db
+      .prepare("SELECT * FROM users WHERE username = ?")
+      .get(username);
+
+    if (existingUser) {
+      res.send("User Already Exists");
+    } else {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const insertUserStmt = db.prepare(
+        "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)"
+      );
+      const result = insertUserStmt.run(username, email, hashedPassword, role);
+
+      if (result.changes === 1) {
+        console.log(
+          `A row has been inserted with rowid ${result.lastInsertRowid}`
+        );
+        res.send("User Created");
+      } else {
+        console.error("Failed to insert user");
+        res.status(500).send("Failed to create user");
       }
-    );
+    }
   },
 };

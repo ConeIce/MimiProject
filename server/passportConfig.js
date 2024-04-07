@@ -8,41 +8,36 @@ const db = new sqlite("./database.db");
 module.exports = function (passport) {
   passport.use(
     new localStrategy((username, password, done) => {
-      db.get(
-        "SELECT * FROM users WHERE username = ?",
-        [username],
-        (err, row) => {
-          if (err) {
-            throw err;
-          }
-          if (!row) {
-            return done(null, false);
-          }
-          bcrypt.compare(password, row.password, (err, result) => {
-            if (err) {
-              throw err;
-            }
-            if (result === true) {
-              return done(null, row);
-            } else {
-              return done(null, false);
-            }
-          });
+      if (!username || !password) {
+        return res.status(400).send("Username and password are required");
+      }
+
+      const user = db
+        .prepare("SELECT * FROM users WHERE username = ?")
+        .get(username);
+
+      if (!user) {
+        return done(null, false);
+      }
+
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (err) {
+          throw err;
         }
-      );
+        if (result === true) {
+          return done(null, user);
+        } else {
+          return done(null, false);
+        }
+      });
     })
   );
 
-  passport.serializeUser((user, cb) => {
-    cb(null, user.id);
+  passport.serializeUser(function (user, done) {
+    done(null, user);
   });
 
-  passport.deserializeUser((id, cb) => {
-    db.get("SELECT * FROM users WHERE id = ?", [id], (err, row) => {
-      if (err) {
-        return cb(err);
-      }
-      cb(null, row);
-    });
+  passport.deserializeUser(function (user, done) {
+    done(null, user);
   });
 };
