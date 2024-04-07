@@ -1,14 +1,6 @@
-import {
-  ChevronDown,
-  LayoutDashboard,
-  LogOut,
-  Printer,
-  Settings,
-  User,
-} from "lucide-react";
+import { ChevronDown, LayoutDashboard, LogOut, Printer } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuTrigger,

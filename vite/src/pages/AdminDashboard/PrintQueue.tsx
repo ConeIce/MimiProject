@@ -7,50 +7,27 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const invoices = [
+const files = [
   {
-    invoice: "INV002",
-
-    print: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
+    printId: 1,
+    pages: 10,
+    copies: 2,
+    fileName: "file1.pdf",
+    printStatus: "Done",
   },
   {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
+    printId: 2,
+    pages: 5,
+    copies: 1,
+    fileName: "file2.pdf",
+    printStatus: "Pending",
   },
   {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
+    printId: 3,
+    pages: 8,
+    copies: 3,
+    fileName: "file3.pdf",
+    printStatus: "Pending",
   },
 ];
 
@@ -58,10 +35,15 @@ export default function PrintQueue() {
   return (
     <div className="p-10 px-16 w-full">
       <h1 className="text-2xl font-semibold mb-6">Pending Prints</h1>
-      <p className="mb-12">
+      <p>
         Lists all prints waiting for printers/authorization. Completed prints
-        can be found <a href="/here">here</a>
+        can be found{" "}
+        <a href="/here" className="underline">
+          here
+        </a>
       </p>
+
+      <p className="mb-12 font-semibold mt-4">The changes are realtime.</p>
 
       <Table>
         <TableHeader>
@@ -70,16 +52,17 @@ export default function PrintQueue() {
             <TableHead>Pages</TableHead>
             <TableHead>Copies</TableHead>
             <TableHead>File Name</TableHead>
-            <TableHead>File Name</TableHead>
+            <TableHead>Print status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell>{invoice.totalAmount}</TableCell>
+          {files.map((file) => (
+            <TableRow key={file.printId}>
+              <TableCell className="font-medium">{file.printId}</TableCell>
+              <TableCell className="font-medium">{file.pages}</TableCell>
+              <TableCell>{file.copies}</TableCell>
+              <TableCell>{file.fileName}</TableCell>
+              <TableCell>{file.printStatus}</TableCell>
             </TableRow>
           ))}
         </TableBody>

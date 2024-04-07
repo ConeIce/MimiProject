@@ -10,6 +10,12 @@ const AuthRoute = require("./routes/auth.js");
 const passport = require("passport");
 const passportLocal = require("passport-local");
 
+const { createServer } = require("node:http");
+const server = createServer(app);
+
+const { Server } = require("socket.io");
+const io = new Server(server);
+
 app.use(cors());
 
 app.use(express.urlencoded({ extended: false }));
