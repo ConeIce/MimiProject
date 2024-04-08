@@ -1,97 +1,69 @@
-import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Printer, Cross, Check } from "lucide-react";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function AllPrintsPage() {
+  const [files, setFiles] = useState([]);
+
+  useEffect(() => {
+    async function fetchFiles() {
+      try {
+        const response = await axios.get("http://localhost:3000/dash/files", {
+          withCredentials: true,
+        });
+
+        console.log(response.data);
+
+        setFiles(response.data);
+      } catch (error) {
+        console.error("Error retricing user files", error);
+      }
+    }
+    fetchFiles();
+  }, []);
+
   return (
-    <div className="p-10 grid grid-cols-3 gap-6">
-      <Card className="w-[300px]">
-        <CardHeader>
-          <CardTitle>WAD_Project</CardTitle>
-          <CardDescription> </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          <div className=" flex items-center space-x-4 rounded-md border p-4">
-            <Printer />
-            <div className="flex-1 space-y-1">
-              <p className="text-sm font-medium leading-none">3 Copies</p>
-              <p className="text-sm text-muted-foreground">Black and White</p>
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full" variant="destructive">
-            <Cross className="mr-2 h-4 w-4" /> Not Ready
-          </Button>
-        </CardFooter>
-      </Card>
-      <Card className="w-[300px]">
-        <CardHeader>
-          <CardTitle>WAD_Project</CardTitle>
-          <CardDescription> </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          <div className=" flex items-center space-x-4 rounded-md border p-4">
-            <Printer />
-            <div className="flex-1 space-y-1">
-              <p className="text-sm font-medium leading-none">3 Copies</p>
-              <p className="text-sm text-muted-foreground">Black and White</p>
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full" variant="destructive">
-            <Cross className="mr-2 h-4 w-4" /> Not Ready
-          </Button>
-        </CardFooter>
-      </Card>
-      <Card className="w-[300px]">
-        <CardHeader>
-          <CardTitle>WAD_Project</CardTitle>
-          <CardDescription> </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          <div className=" flex items-center space-x-4 rounded-md border p-4">
-            <Printer />
-            <div className="flex-1 space-y-1">
-              <p className="text-sm font-medium leading-none">1 Copies</p>
-              <p className="text-sm text-muted-foreground">Black and White</p>
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full" variant="destructive">
-            <Cross className="mr-2 h-4 w-4" /> Not Ready
-          </Button>
-        </CardFooter>
-      </Card>
-      <Card className="w-[300px]">
-        <CardHeader>
-          <CardTitle>WAD_Project</CardTitle>
-          <CardDescription> </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          <div className=" flex items-center space-x-4 rounded-md border p-4">
-            <Printer />
-            <div className="flex-1 space-y-1">
-              <p className="text-sm font-medium leading-none">5 Copies</p>
-              <p className="text-sm text-muted-foreground">Colour</p>
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full" variant="default">
-            <Check className="mr-2 h-4 w-4" /> Ready
-          </Button>
-        </CardFooter>
-      </Card>
+    <div className="p-10 px-16 w-full">
+      <h1 className="text-2xl font-semibold mb-6">Your prints</h1>
+      <p>Lists all prints and their current status</p>
+
+      <p className="mb-12 font-semibold mt-4">The changes are realtime.</p>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">Print Id</TableHead>
+            <TableHead>Pages</TableHead>
+            <TableHead>Copies</TableHead>
+            <TableHead>File Name</TableHead>
+            <TableHead>Shop Name</TableHead>
+
+            <TableHead>Print status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {files.map((file) => (
+            <TableRow key={file.printId}>
+              <TableCell className="font-medium">{file.id}</TableCell>
+              <TableCell className="font-medium">
+                {file.pageRange || "All pages"}
+              </TableCell>
+              <TableCell>{file.copies}</TableCell>
+              <TableCell>{file.filename}</TableCell>
+              <TableCell>{file.shop}</TableCell>
+
+              <TableCell>{file.done ? "Done" : "Pending"}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }

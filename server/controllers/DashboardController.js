@@ -50,12 +50,20 @@ module.exports = {
   },
 
   getFiles: (req, res) => {
-    db.all("SELECT * FROM files", (err, rows) => {
-      if (err) {
-        console.error("Error retrieving data from database:", err);
-        return res.status(500).json({ message: "Internal server error" });
+    try {
+      const files = db
+        .prepare("SELECT * FROM files WHERE user_id = ?")
+        .all(req.user.user_id);
+
+      console.log(files);
+
+      if (!files) {
+        return res.status(404).json("No files found");
       }
-      res.status(200).json(rows);
-    });
+      res.json(files);
+    } catch (err) {
+      console.error("Error retrieving data from database:", err);
+      return res.status(500).json("Internal server error");
+    }
   },
 };

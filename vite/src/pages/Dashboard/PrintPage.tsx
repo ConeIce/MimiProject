@@ -99,7 +99,7 @@ export default function PrintPage() {
     try {
       console.log("Sending form data:", formData);
       const response = await axios.post(
-        "http://localhost:3000/dash/submitPrint",
+        "http://localhost:3000/dash/files",
         formData,
         {
           withCredentials: true,
