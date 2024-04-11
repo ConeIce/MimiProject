@@ -1,8 +1,6 @@
-// TODO: normal users can use this login page to access the admin dashboard. prevent this
-
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
+import axios from "axios"; // You may need to install axios: npm install axios
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -17,10 +15,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 
-export default function AdminLogin() {
+export default function AdminRegister() {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
   const { toast } = useToast();
 
@@ -29,17 +27,20 @@ export default function AdminLogin() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/login",
+        "http://localhost:3000/auth/register",
         {
           username,
+          email,
           password,
+          role: "admin",
         },
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-      console.log(response.data);
-      navigate("/admin-dashboard");
+
+      toast({
+        title: "Registration successful",
+        description: `Welcome ${username}`,
+      });
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
@@ -56,8 +57,6 @@ export default function AdminLogin() {
           });
         }
       }
-
-      console.error("Error logging in:", error);
     }
   };
 
@@ -65,8 +64,8 @@ export default function AdminLogin() {
     <div className="flex items-center justify-center h-screen bg-login bg-no-repeat bg-center bg-cover">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Login to admin dashboard</CardTitle>
-          <CardDescription>Access the admin dashboard.</CardDescription>
+          <CardTitle>Register</CardTitle>
+          <CardDescription>Register a new admin</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent>
@@ -78,6 +77,16 @@ export default function AdminLogin() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="framework">Email</Label>
+                <Input
+                  placeholder="Your email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -94,10 +103,10 @@ export default function AdminLogin() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Link to="/admin-register">
-              <Button variant="outline">Register new admin</Button>
+            <Link to="/admin-login">
+              <Button variant="outline">Have an account? Login</Button>
             </Link>
-            <Button type="submit">Login</Button>
+            <Button type="submit">Register</Button>
           </CardFooter>
         </form>
       </Card>

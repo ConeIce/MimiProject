@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios"; // You may need to install axios: npm install axios
-import "./authentication.css";
+import axios from "axios";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";

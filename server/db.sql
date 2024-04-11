@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
 	username TEXT NOT NULL,
 	email TEXT,
 	password TEXT NOT NULL,
-	role TEXT NOT NULL -- admin | default
+	role TEXT NOT NULL -- admin | user
 );
 
 CREATE TABLE IF NOT EXISTS shops (

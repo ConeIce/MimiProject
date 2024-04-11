@@ -6,8 +6,11 @@ const sqlite = require("better-sqlite3");
 const SqliteStore = require("better-sqlite3-session-store")(session);
 const sessionsDB = new sqlite("sessions.db");
 const upload = require("./mult");
+
 const AuthRoute = require("./routes/auth.js");
 const DashboardRoute = require("./routes/dashboard.js");
+const AdminDashboardRoute = require("./routes/adminDashboard.js");
+
 const passport = require("passport");
 const passportLocal = require("passport-local");
 
@@ -45,10 +48,12 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 const passportConfig = require("./passportConfig.js");
+const isLoggedInAsAdmin = require("./middleware/isLoggedInAsAdmin.js");
 passportConfig(passport);
 
 app.use("/auth", AuthRoute);
 app.use("/dash", isLoggedIn, DashboardRoute);
+app.use("/admin-dash", isLoggedInAsAdmin, AdminDashboardRoute);
 
 app.post("/forgot-password", (req, res) => {
   const { email } = req.body;

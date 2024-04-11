@@ -39,10 +39,8 @@ module.exports = function (passport) {
 
   passport.deserializeUser(function (id, done) {
     const user = db
-      .prepare("SELECT user_id, username FROM users WHERE user_id = ?")
+      .prepare("SELECT user_id, username, role FROM users WHERE user_id = ?")
       .get(id);
-
-    console.log(user);
 
     done(null, user);
   });

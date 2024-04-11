@@ -11,8 +11,6 @@ module.exports = {
     const { shopName, paperSize, orientation, pageRange, copies } = req.body;
     const file = req.file;
 
-    console.log("PageRange", pageRange);
-
     if (!shopName || !paperSize || !orientation || !copies || !file) {
       return res.status(400).json({
         message: "All fields are required",
@@ -54,8 +52,6 @@ module.exports = {
       const files = db
         .prepare("SELECT * FROM files WHERE user_id = ?")
         .all(req.user.user_id);
-
-      console.log(files);
 
       if (!files) {
         return res.status(404).json("No files found");

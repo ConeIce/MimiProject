@@ -15,6 +15,7 @@ import AdminLogin from "./pages/Authentication/AdminAuth/AdminLogin.tsx";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard.tsx";
 import PrintQueue from "./pages/AdminDashboard/PrintQueue.tsx";
 import Dashboard from "./pages/AdminDashboard/Dashboard.tsx";
+import AdminRegister from "./pages/Authentication/AdminAuth/AdminRegister.tsx";
 
 const router = createBrowserRouter([
   {
@@ -25,14 +26,7 @@ const router = createBrowserRouter([
     path: "/register",
     element: <RegisterPage />,
   },
-  {
-    path: "/forgot-password",
-    element: <ForgotPage />,
-  },
-  {
-    path: "admin-login",
-    element: <AdminLogin />,
-  },
+
   {
     path: "/dashboard",
     element: <DashboardPage />,
@@ -46,6 +40,16 @@ const router = createBrowserRouter([
         element: <AllPrintsPage />,
       },
     ],
+  },
+
+  {
+    path: "admin-login",
+    element: <AdminLogin />,
+  },
+
+  {
+    path: "admin-register",
+    element: <AdminRegister />,
   },
 
   {

@@ -1,4 +1,6 @@
 const isLoggedIn = (req, res, next) => {
+  console.log("From user middleware", req.user);
+
   if (req.isAuthenticated()) {
     return next();
   }

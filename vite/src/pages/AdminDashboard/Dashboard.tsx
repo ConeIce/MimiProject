@@ -1,7 +1,16 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import axios from "axios";
 
 export default function Dashboard() {
+  axios
+    .get("http://localhost:3000/admin-dash/test-route", {
+      withCredentials: true,
+    })
+    .then((res) => {
+      console.log(res);
+    });
+
   return (
     <div className="p-10 px-16 w-full">
       <h1 className="text-2xl">Shop Settings</h1>

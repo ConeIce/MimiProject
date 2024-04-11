@@ -25,9 +25,7 @@ module.exports = {
   register: async (req, res) => {
     console.log(req.body);
 
-    const username = req.body.username;
-    const email = req.body.email;
-    const password = req.body.password;
+    const { username, email, password } = req.body;
     const role = req.body.role || "user";
 
     if (!username || !email || !password) {
@@ -49,7 +47,6 @@ module.exports = {
       .get(username);
 
     if (existingUser) {
-      console.log("Here");
       res.status(400).send("User Already Exists");
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
