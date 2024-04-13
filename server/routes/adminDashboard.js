@@ -3,8 +3,8 @@ const controller = require("../controllers/AdminDashboardController.js");
 
 const router = express.Router();
 
-router.get("/test-route", (req, res) => {
-  controller.get(req, res);
+router.post("/shop", (req, res) => {
+  controller.postShop(req, res);
 });
 
 module.exports = router;
