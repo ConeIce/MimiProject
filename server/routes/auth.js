@@ -11,6 +11,10 @@ router.post("/register", (req, res) => {
   controller.register(req, res);
 });
 
+router.post("/registerClient", upload.single("file"), (req, res) => {
+  controller.registerClient(req, res);
+});
+
 router.post("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
