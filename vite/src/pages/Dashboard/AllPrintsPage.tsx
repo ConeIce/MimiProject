@@ -23,7 +23,7 @@ export default function AllPrintsPage() {
 
         setFiles(response.data);
       } catch (error) {
-        console.error("Error retricing user files", error);
+        console.error("Error retreiving user files", error);
       }
     }
     fetchFiles();
@@ -50,14 +50,14 @@ export default function AllPrintsPage() {
         </TableHeader>
         <TableBody>
           {files.map((file) => (
-            <TableRow key={file.printId}>
-              <TableCell className="font-medium">{file.id}</TableCell>
+            <TableRow key={file.file_id}>
+              <TableCell className="font-medium">{file.file_id}</TableCell>
               <TableCell className="font-medium">
                 {file.pageRange || "All pages"}
               </TableCell>
               <TableCell>{file.copies}</TableCell>
               <TableCell>{file.filename}</TableCell>
-              <TableCell>{file.shop}</TableCell>
+              <TableCell>{file.shop_name}</TableCell>
 
               <TableCell>{file.done ? "Done" : "Pending"}</TableCell>
             </TableRow>

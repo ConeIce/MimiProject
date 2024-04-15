@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
@@ -19,6 +19,8 @@ export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const { toast } = useToast();
 
@@ -40,6 +42,20 @@ export default function RegisterPage() {
         title: "Registration successful",
         description: `Welcome ${username}`,
       });
+
+      const loginRes = await axios.post(
+        "http://localhost:3000/auth/login",
+        {
+          username,
+          password,
+          role: "user",
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(loginRes.data);
+      navigate("/dashboard/print");
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
