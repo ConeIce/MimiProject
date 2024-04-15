@@ -5,7 +5,7 @@ const session = require("express-session");
 const sqlite = require("better-sqlite3");
 const SqliteStore = require("better-sqlite3-session-store")(session);
 const sessionsDB = new sqlite("sessions.db");
-const upload = require("./mult");
+const upload = require("./multFiles.js");
 
 const AuthRoute = require("./routes/auth.js");
 const DashboardRoute = require("./routes/dashboard.js");

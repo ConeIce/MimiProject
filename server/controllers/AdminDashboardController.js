@@ -34,4 +34,60 @@ module.exports = {
 
     res.json("Admin Dashboard Route");
   },
+  getAllShops: (req, res) => {
+    try {
+      const shops = db.prepare("SELECT * FROM shops").all();
+      res.json(shops);
+    } catch (err) {
+      console.error("Error retrieving shops:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+  getUsersByShop: (req, res) => {
+    const shopId = req.params.shopId;
+
+    try {
+      const users = db
+        .prepare(
+          `
+        SELECT u.username, u.email, u.role 
+        FROM users u
+        WHERE EXISTS (
+          SELECT 1 FROM client_requests cr
+          WHERE cr.user_id = u.user_id AND cr.shop_id = ?
+        )
+      `
+        )
+        .all(shopId);
+
+      res.json(users);
+    } catch (err) {
+      console.error("Error retrieving users by shop:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+  approveClientRequest: (req, res) => {
+    const userId = req.params.userId;
+    const shopId = req.params.shopId;
+
+    try {
+      const updateStmt = db.prepare(
+        "UPDATE users SET is_client = 'yes' WHERE user_id = ?"
+      );
+      const result = updateStmt.run(userId);
+
+      if (result.changes === 1) {
+        db.prepare(
+          "DELETE FROM client_requests WHERE user_id = ? AND shop_id = ?"
+        ).run(userId, shopId);
+
+        res.json({ message: "Client request approved successfully" });
+      } else {
+        res.status(500).json({ message: "Failed to approve client request" });
+      }
+    } catch (err) {
+      console.error("Error approving client request:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
 };
