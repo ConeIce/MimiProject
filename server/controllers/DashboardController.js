@@ -17,8 +17,10 @@ module.exports = {
       });
     }
 
+    const defaultStatus = "ongoing";
+
     const insertStmt = db.prepare(
-      "INSERT INTO files (shop, size, orientation, pageRange, copies, filename, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
+      "INSERT INTO files (shop, size, orientation, pageRange, copies, filename, status, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
     );
 
     try {
@@ -29,6 +31,7 @@ module.exports = {
         pageRange,
         parseInt(copies),
         file.originalname,
+        defaultStatus,
         user.user_id
       );
 
@@ -47,18 +50,36 @@ module.exports = {
     }
   },
 
-  getFiles: (req, res) => {
+  getOngoingFiles: (req, res) => {
     try {
-      const files = db
-        .prepare("SELECT * FROM files WHERE user_id = ?")
+      const ongoingFiles = db
+        .prepare("SELECT * FROM files WHERE user_id = ? AND status = 'ongoing'")
         .all(req.user.user_id);
 
-      if (!files) {
-        return res.status(404).json("No files found");
+      if (!ongoingFiles || ongoingFiles.length === 0) {
+        return res.status(404).json("No ongoing files found");
       }
-      res.json(files);
+      res.json(ongoingFiles);
     } catch (err) {
-      console.error("Error retrieving data from database:", err);
+      console.error("Error retrieving ongoing files from database:", err);
+      return res.status(500).json("Internal server error");
+    }
+  },
+
+  getCompletedFiles: (req, res) => {
+    try {
+      const completedFiles = db
+        .prepare(
+          "SELECT * FROM files WHERE user_id = ? AND status = 'completed'"
+        )
+        .all(req.user.user_id);
+
+      if (!completedFiles || completedFiles.length === 0) {
+        return res.status(404).json("No completed files found");
+      }
+      res.json(completedFiles);
+    } catch (err) {
+      console.error("Error retrieving completed files from database:", err);
       return res.status(500).json("Internal server error");
     }
   },

@@ -90,4 +90,32 @@ module.exports = {
       res.status(500).json({ message: "Internal server error" });
     }
   },
+  getShopOngoingFiles: (req, res) => {
+    const { shopName } = req.params;
+
+    try {
+      const ongoingFiles = db
+        .prepare("SELECT * FROM files WHERE shop = ? AND status = 'ongoing'")
+        .all(shopName);
+
+      res.json(ongoingFiles);
+    } catch (err) {
+      console.error("Error retrieving ongoing shop files:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+  getShopCompletedFiles: (req, res) => {
+    const { shopName } = req.params;
+
+    try {
+      const completedFiles = db
+        .prepare("SELECT * FROM files WHERE shop = ? AND status = 'completed'")
+        .all(shopName);
+
+      res.json(completedFiles);
+    } catch (err) {
+      console.error("Error retrieving completed shop files:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
 };
