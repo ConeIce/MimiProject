@@ -12,4 +12,8 @@ router.get("/files", (req, res) => {
   controller.getFiles(req, res);
 });
 
+router.get("/shops", (req, res) => {
+  controller.getShops(req, res);
+});
+
 module.exports = router;

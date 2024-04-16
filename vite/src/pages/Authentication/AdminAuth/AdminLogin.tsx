@@ -33,13 +33,19 @@ export default function AdminLogin() {
         {
           username,
           password,
+          role: "admin",
         },
         {
           withCredentials: true,
         }
       );
       console.log(response.data);
-      navigate("/admin-dashboard");
+
+      if (response.data.new) {
+        navigate("/admin-walkthrough");
+      } else {
+        navigate("/admin-dashboard");
+      }
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
@@ -47,11 +53,14 @@ export default function AdminLogin() {
             title: "Oops. Error 400.",
             description: error.response.data,
           });
-        }
-
-        if (error.response.status === 500) {
+        } else if (error.response.status === 500) {
           toast({
             title: "Oops. Error 500. Not your fault",
+            description: error.response.data,
+          });
+        } else {
+          toast({
+            title: `Oops. Error ${error.response.status}`,
             description: error.response.data,
           });
         }

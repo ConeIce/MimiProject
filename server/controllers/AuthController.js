@@ -13,21 +13,27 @@ module.exports = {
   login: (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) throw err;
-      if (!user) res.status(400).send("No User Exists or password is wrong");
-      else {
-        req.logIn(user, (err) => {
-          if (err) throw err;
-          const user = {
-            username: req.user.username,
-            role: req.user.role,
-            email: req.user.email,
-            new: req.user.new,
-            user_id: req.user.user_id,
-          };
-
-          res.send(user);
-        });
+      if (!user) {
+        return res.status(400).send("No User Exists or password is wrong");
       }
+
+      console.log(req.body, user.role, req.body.role !== user.role);
+      if (user.role !== req.body.role) {
+        return res.status(401).send("Unauthorized User");
+      }
+
+      req.logIn(user, (err) => {
+        if (err) throw err;
+        const user = {
+          username: req.user.username,
+          role: req.user.role,
+          email: req.user.email,
+          new: req.user.new,
+          user_id: req.user.user_id,
+        };
+
+        res.send(user);
+      });
     })(req, res, next);
   },
   register: async (req, res) => {
@@ -58,6 +64,14 @@ module.exports = {
         .send(
           "Password must contain at least one special character and one number"
         );
+    }
+
+    const existingEmail = db
+      .prepare("SELECT * FROM users WHERE email = ?")
+      .get(email);
+
+    if (existingEmail) {
+      return res.status(400).send("Email Already Exists");
     }
 
     const existingUser = db

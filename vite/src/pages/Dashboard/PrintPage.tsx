@@ -45,7 +45,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 const FormSchema = z.object({
-  shopName: z.string(),
+  shopId: z.string(),
   paperSize: z.string(),
   orientation: z.string(),
   file: z.union([z.instanceof(File), z.undefined()]),
@@ -59,6 +59,26 @@ let INITIAL_NUMBER_OF_PAGES: number;
 export default function PrintPage() {
   const { toast } = useToast();
 
+  const [shops, setShops] = useState([]);
+
+  useEffect(() => {
+    async function fetchShops() {
+      try {
+        const response = await axios.get("http://localhost:3000/dash/shops", {
+          withCredentials: true,
+        });
+
+        console.log(response.data);
+
+        setShops(response.data);
+      } catch (error) {
+        console.error("Error fetching shops:", error);
+      }
+    }
+
+    fetchShops();
+  }, []);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -69,7 +89,7 @@ export default function PrintPage() {
   });
 
   const [formData, setFormData] = useState<z.infer<typeof FormSchema>>({
-    shopName: "",
+    shopId: 0,
     paperSize: "A4",
     orientation: "Portrait",
     file: undefined,
@@ -89,7 +109,7 @@ export default function PrintPage() {
 
     console.log(formData);
 
-    formData.append("shopName", data.shopName);
+    formData.append("shopId", data.shopId);
     formData.append("paperSize", data.paperSize);
     formData.append("orientation", data.orientation);
     formData.append("color", String(data.color));
@@ -205,7 +225,7 @@ export default function PrintPage() {
 
               <FormField
                 control={form.control}
-                name="shopName"
+                name="shopId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Select a shop</FormLabel>
@@ -221,13 +241,15 @@ export default function PrintPage() {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Shop</SelectLabel>
-                          <SelectItem value="Kanjirapally">
-                            Kanjirapally
-                          </SelectItem>
-                          <SelectItem value="Koovapally">Koovapally</SelectItem>
-                          <SelectItem value="Global AJCE">
-                            Global AJCE
-                          </SelectItem>
+
+                          {shops.map((shop) => (
+                            <SelectItem
+                              value={shop.shop_id.toString()}
+                              key={shop.shop_id}
+                            >
+                              {shop.shop_name}
+                            </SelectItem>
+                          ))}
                         </SelectGroup>
                       </SelectContent>
                     </Select>
