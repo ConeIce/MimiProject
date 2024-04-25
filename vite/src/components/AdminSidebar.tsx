@@ -21,7 +21,7 @@ export default function AdminSidebar() {
       <div className="px-8">
         <h3 className="text-xl mt-8 mb-8">Menu</h3>
 
-        <Link to="/admin-dashboard">
+        <Link to="/admin/dashboard">
           <Button
             variant="ghost"
             className="w-full mb-4 justify-start hover:bg-white"
@@ -33,7 +33,7 @@ export default function AdminSidebar() {
           </Button>
         </Link>
 
-        <Link to="/admin-dashboard/print">
+        <Link to="/admin/dashboard/print">
           <Button
             variant="ghost"
             className="w-full mb-4 justify-start hover:bg-white"
@@ -45,7 +45,7 @@ export default function AdminSidebar() {
           </Button>
         </Link>
 
-        <Link to="/admin-dashboard/print">
+        <Link to="/admin/dashboard/print">
           <Button
             variant="ghost"
             className="w-full mb-4 justify-start hover:bg-white"
@@ -54,6 +54,18 @@ export default function AdminSidebar() {
               <Printer className="h-4 w-4 text-white" />
             </div>
             Available Printers
+          </Button>
+        </Link>
+
+        <Link to="/admin/dashboard/settings">
+          <Button
+            variant="ghost"
+            className="w-full mb-4 justify-start hover:bg-white"
+          >
+            <div className="bg-black mr-5 p-2 rounded-md">
+              <Printer className="h-4 w-4 text-white" />
+            </div>
+            Shop settings
           </Button>
         </Link>
       </div>

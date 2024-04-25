@@ -1,6 +1,4 @@
 const sqlite = require("better-sqlite3");
-const bcrypt = require("bcryptjs");
-const passport = require("passport");
 
 const db = new sqlite("./database.db");
 

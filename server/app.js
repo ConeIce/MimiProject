@@ -10,6 +10,7 @@ const upload = require("./multFiles.js");
 const AuthRoute = require("./routes/auth.js");
 const DashboardRoute = require("./routes/dashboard.js");
 const AdminDashboardRoute = require("./routes/adminDashboard.js");
+const ShopRoute = require("./routes/shop.js");
 
 const passport = require("passport");
 const passportLocal = require("passport-local");
@@ -17,6 +18,7 @@ const passportLocal = require("passport-local");
 const cookieParser = require("cookie-parser");
 
 const isLoggedIn = require("./middleware/isLoggedIn.js");
+const isLoggedInAsAdmin = require("./middleware/isLoggedInAsAdmin.js");
 
 const corsOptions = {
   origin: "http://localhost:5173",
@@ -35,7 +37,6 @@ app.use(cookieParser("bigboysecurity"));
 
 app.use(
   session({
-    // proxy: process.env.ENV === "production",
     store: new SqliteStore({
       client: sessionsDB,
     }),
@@ -48,17 +49,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 const passportConfig = require("./passportConfig.js");
-const isLoggedInAsAdmin = require("./middleware/isLoggedInAsAdmin.js");
 passportConfig(passport);
 
 app.use("/auth", AuthRoute);
 app.use("/dash", isLoggedIn, DashboardRoute);
-app.use("/admin-dash", isLoggedInAsAdmin, AdminDashboardRoute);
-
-app.post("/forgot-password", (req, res) => {
-  const { email } = req.body;
-  res.send("Forgot password route");
-});
+app.use("/admin/shop", isLoggedInAsAdmin, ShopRoute);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

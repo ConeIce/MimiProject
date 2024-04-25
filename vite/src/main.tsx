@@ -7,7 +7,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import DashboardPage from "./pages/Dashboard/DashboardPage.tsx";
 import PrintPage from "./pages/Dashboard/PrintPage.tsx";
-import ForgotPage from "./pages/Authentication/ForgotPage.tsx";
 import LoginPage from "./pages/Authentication/LoginPage.tsx";
 import RegisterPage from "./pages/Authentication/RegisterPage.tsx";
 import AllPrintsPage from "./pages/Dashboard/AllPrintsPage.tsx";
@@ -17,6 +16,7 @@ import PrintQueue from "./pages/AdminDashboard/PrintQueue.tsx";
 import Dashboard from "./pages/AdminDashboard/Dashboard.tsx";
 import AdminRegister from "./pages/Authentication/AdminAuth/AdminRegister.tsx";
 import AdminWalkthrough from "./pages/Authentication/AdminAuth/AdminWalkthrough.tsx";
+import SettingsPage from "./pages/AdminDashboard/SettingsPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -44,22 +44,22 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "admin-login",
+    path: "admin/login",
     element: <AdminLogin />,
   },
 
   {
-    path: "admin-register",
+    path: "admin/register",
     element: <AdminRegister />,
   },
 
   {
-    path: "admin-walkthrough",
+    path: "admin/walkthrough",
     element: <AdminWalkthrough />,
   },
 
   {
-    path: "/admin-dashboard",
+    path: "/admin/dashboard",
     element: <AdminDashboard />,
 
     children: [
@@ -70,6 +70,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Dashboard />,
+      },
+      {
+        path: "settings",
+        element: <SettingsPage />,
       },
     ],
   },

@@ -42,9 +42,9 @@ export default function AdminLogin() {
       console.log(response.data);
 
       if (response.data.new) {
-        navigate("/admin-walkthrough");
+        navigate("/admin/walkthrough");
       } else {
-        navigate("/admin-dashboard");
+        navigate("/admin/dashboard");
       }
     } catch (error) {
       if (error.response) {
@@ -103,7 +103,7 @@ export default function AdminLogin() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Link to="/admin-register">
+            <Link to="/admin/register">
               <Button variant="outline">Register new admin</Button>
             </Link>
             <Button type="submit">Login</Button>
