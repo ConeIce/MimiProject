@@ -1,6 +1,4 @@
-// TODO: normal users can use this login page to access the admin dashboard. prevent this
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster } from "@/components/ui/toaster";
@@ -19,9 +17,26 @@ import { Label } from "@radix-ui/react-label";
 
 export default function AdminWalkthrough() {
   const [shopName, setShopName] = useState("");
+  const [shopsExist, setShopsExist] = useState(false);
   const navigate = useNavigate();
-
   const { toast } = useToast();
+
+  useEffect(() => {
+    checkShopsExistence();
+  }, []);
+
+  const checkShopsExistence = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/admin-dash/shops"
+      );
+      if (response.data.length > 0) {
+        setShopsExist(true);
+      }
+    } catch (error) {
+      console.error("Error checking shop existence:", error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,41 +75,46 @@ export default function AdminWalkthrough() {
     }
   };
 
-  return (
-    <div className="flex items-center justify-center h-screen bg-login bg-no-repeat bg-center bg-cover">
-      <Card className="w-[350px]">
-        <CardHeader>
-          <CardTitle className="mb-3">
-            Add your first shop name to get started
-          </CardTitle>
-          <CardDescription>
-            Your shop will be visible to users by this name
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Shop Name</Label>
-                <Input
-                  placeholder="Your shop name"
-                  type="text"
-                  value={shopName}
-                  onChange={(e) => setShopName(e.target.value)}
-                  required
-                />
-                <p className="text-sm text-slate-600 mt-3">
-                  This can be changed at any time
-                </p>
+  if (!shopsExist) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-login bg-no-repeat bg-center bg-cover">
+        <Card className="w-[350px]">
+          <CardHeader>
+            <CardTitle className="mb-3">
+              Add your first shop name to get started
+            </CardTitle>
+            <CardDescription>
+              Your shop will be visible to users by this name
+            </CardDescription>
+          </CardHeader>
+          <form onSubmit={handleSubmit}>
+            <CardContent>
+              <div className="grid w-full items-center gap-4">
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="name">Shop Name</Label>
+                  <Input
+                    placeholder="Your shop name"
+                    type="text"
+                    value={shopName}
+                    onChange={(e) => setShopName(e.target.value)}
+                    required
+                  />
+                  <p className="text-sm text-slate-600 mt-3">
+                    This can be changed at any time
+                  </p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button type="submit">Save</Button>
-          </CardFooter>
-        </form>
-      </Card>
-      <Toaster />
-    </div>
-  );
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button type="submit">Save</Button>
+            </CardFooter>
+          </form>
+        </Card>
+        <Toaster />
+      </div>
+    );
+  } else {
+    navigate("/admin-dashboard");
+    return null;
+  }
 }
