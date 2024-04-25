@@ -1,5 +1,6 @@
 const express = require("express");
 const controller = require("../controllers/AuthController.js");
+const upload = require("../multFiles.js");
 
 const router = express.Router();
 

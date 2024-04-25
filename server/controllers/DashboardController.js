@@ -20,7 +20,7 @@ module.exports = {
     const defaultStatus = "ongoing";
 
     const insertStmt = db.prepare(
-      "INSERT INTO files (shop, size, orientation, pageRange, copies, filename, status, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+      "INSERT INTO files (shop_id, size, orientation, pageRange, copies, filename, status, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
     );
 
     try {
@@ -60,10 +60,10 @@ module.exports = {
         )
         .all(req.user.user_id);
 
-      if (!ongoingFiles || ongoingFiles.length === 0) {
+      if (!files || files.length === 0) {
         return res.status(404).json("No ongoing files found");
       }
-      res.json(ongoingFiles);
+      res.json(files);
     } catch (err) {
       console.error("Error retrieving ongoing files from database:", err);
       return res.status(500).json("Internal server error");

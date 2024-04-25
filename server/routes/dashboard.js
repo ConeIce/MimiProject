@@ -8,8 +8,8 @@ router.post("/files", upload.single("file"), (req, res) => {
   controller.submitPrint(req, res);
 });
 
-router.get("/files", (req, res) => {
-  controller.getFiles(req, res);
+router.get("/ongoing", (req, res) => {
+  controller.getOngoingFiles(req, res);
 });
 
 router.get("/shops", (req, res) => {
