@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS files (
     copies INTEGER NOT NULL,
     filename TEXT NOT NULL,
 	done BOOLEAN DEFAULT 0,
+	status TEXT NOT NULL,
 	
 	FOREIGN KEY(shop_id) REFERENCES shops(shop_id),
 	FOREIGN KEY(user_id) REFERENCES users(user_id)
@@ -40,6 +41,13 @@ CREATE TABLE IF NOT EXISTS printers (
 	printer_name TEXT NOT NULL,
 	user_id INTEGER,
 	FOREIGN KEY(user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE IF NOT EXISTS routes (
+    route_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    shop_id INTEGER,
+    route_link TEXT,
+    FOREIGN KEY(shop_id) REFERENCES shops(shop_id)
 );
 	
 

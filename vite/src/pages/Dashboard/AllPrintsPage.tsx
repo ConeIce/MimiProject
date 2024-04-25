@@ -15,10 +15,11 @@ export default function AllPrintsPage() {
   useEffect(() => {
     async function fetchFiles() {
       try {
-        const response = await axios.get("http://localhost:3000/dash/files", {
+        const response = await axios.get("http://localhost:3000/dash/ongoing", {
           withCredentials: true,
         });
 
+        console.log(response);
         console.log(response.data);
 
         setFiles(response.data);
