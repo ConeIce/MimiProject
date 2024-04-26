@@ -20,6 +20,7 @@ import AddShop from "./pages/AdminDashboard/AddShop.tsx";
 import ClientLogin from "./pages/Authentication/ClientAuth/ClientLogin.tsx";
 import ClientRegister from "./pages/Authentication/ClientAuth/ClientRegister.tsx";
 import ClientWalkthrough from "./pages/Authentication/ClientAuth/ClientWalkthrough.tsx";
+import ApproveRequest from "./pages/AdminDashboard/ApproveRequest.tsx";
 import SettingsPage from "./pages/AdminDashboard/SettingsPage.tsx";
 
 const router = createBrowserRouter([
@@ -78,17 +79,17 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "admin/login",
+    path: "admin-login",
     element: <AdminLogin />,
   },
 
   {
-    path: "admin/register",
+    path: "admin-register",
     element: <AdminRegister />,
   },
 
   {
-    path: "admin/walkthrough",
+    path: "admin-walkthrough",
     element: <AdminWalkthrough />,
   },
 
@@ -98,12 +99,17 @@ const router = createBrowserRouter([
   },
 
   {
+    path: "approve-request",
+    element: <ApproveRequest />,
+  },
+
+  {
     path: "add-shop",
     element: <AddShop />,
   },
 
   {
-    path: "/admin/dashboard",
+    path: "/admin-dashboard",
     element: <AdminDashboard />,
 
     children: [

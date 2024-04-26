@@ -50,7 +50,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 const passportConfig = require("./passportConfig.js");
-const isLoggedInAsAdmin = require("./middleware/isLoggedInAsAdmin.js");
+const isLoggedInAsClient = require("./middleware/isLoggedInAsClient.js");
 passportConfig(passport);
 
 app.use("/auth", AuthRoute);

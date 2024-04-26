@@ -6,16 +6,18 @@ import { useNavigate } from "react-router-dom";
 export default function Dashboard() {
   const [shops, setShops] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [pendingShops, setPendingShops] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchShops();
+    fetchPendingShops();
   }, []);
 
   const fetchShops = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/admin-dash/allshops",
+        `http://localhost:3000/admin-dash/searchShop?search=${searchTerm}`,
         {
           withCredentials: true,
         }
@@ -27,27 +29,38 @@ export default function Dashboard() {
     }
   };
 
+  const fetchPendingShops = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/admin-dash/pendingShops",
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
+      setPendingShops(response.data.slice(0, 5)); // Display only the first 5 pending shops
+    } catch (error) {
+      console.error("Error fetching pending shops:", error);
+    }
+  };
+
   const handleAddShop = () => {
     navigate("/add-shop");
   };
 
-  const handleSelectShop = (shop) => {
-    // Implement logic to handle when a shop is selected
+  const handleSearch = () => {
+    fetchShops();
   };
 
-  // Filter shops based on search term
-  const filteredShops = shops.filter((shop) =>
-    shop.shop_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  // Display only the first 5 shops
-  const limitedShops = filteredShops.slice(0, 5);
+  const handleSelectShop = (id) => {
+    navigate(`/approve-request?id=${id}`); // Navigate to approve-request with shop ID as query parameter
+  };
 
   return (
     <div className="p-10 px-16 w-full">
       <h1 className="text-2xl">Shop Settings</h1>
 
-      <div className="mt-4">
+      <div className="mt-4 flex items-center">
         <Label>Search Shop</Label>
         <input
           type="text"
@@ -56,10 +69,16 @@ export default function Dashboard() {
           placeholder="Search by shop name..."
           className="block w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 mt-1"
         />
+        <button
+          className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md"
+          onClick={handleSearch}
+        >
+          Search
+        </button>
       </div>
 
       <div>
-        <Label>Shop Name (Limited to 5)</Label>
+        <Label>Shop Name</Label>
         <div className="flex flex-wrap gap-4 mt-3">
           <button
             className="bg-green-500 text-white px-4 py-2 rounded-md"
@@ -67,19 +86,25 @@ export default function Dashboard() {
           >
             Add Shop
           </button>
-          {limitedShops.map((shop) => (
+        </div>
+      </div>
+
+      <hr className="my-8 border-gray-300" />
+
+      <div>
+        <h2 className="text-xl">Pending Approvals</h2>
+        <div className="flex flex-wrap gap-4 mt-3">
+          {pendingShops.map((shop) => (
             <button
               key={shop.shop_id}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-              onClick={() => handleSelectShop(shop)}
+              className="bg-yellow-500 text-white px-4 py-2 rounded-md"
+              onClick={() => handleSelectShop(shop.shop_id)}
             >
               {shop.shop_name}
             </button>
           ))}
         </div>
       </div>
-
-      <hr className="my-8 border-gray-300" />
     </div>
   );
 }

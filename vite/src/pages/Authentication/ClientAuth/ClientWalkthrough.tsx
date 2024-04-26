@@ -75,6 +75,9 @@ export default function ClientWalkthrough() {
       return;
     }
 
+    console.log(personalPhoto);
+    console.log(proofOfWork);
+
     try {
       const formData = new FormData();
       formData.append("shopId", selectedShop); // Include selected shop ID
@@ -137,7 +140,7 @@ export default function ClientWalkthrough() {
                     Select a shop
                   </option>
                   {shopsList.map((shop, index) => (
-                    <option key={index} value={shop.shop_name}>
+                    <option key={index} value={shop.shop_id}>
                       {shop.shop_name}
                     </option>
                   ))}

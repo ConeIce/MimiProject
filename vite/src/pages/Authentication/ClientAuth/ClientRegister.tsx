@@ -45,6 +45,7 @@ export default function ClientRegister() {
           email,
           password,
           role: "client",
+          new: 1,
         },
         { withCredentials: true }
       );
