@@ -17,6 +17,10 @@ import PrintQueue from "./pages/AdminDashboard/PrintQueue.tsx";
 import Dashboard from "./pages/AdminDashboard/Dashboard.tsx";
 import AdminRegister from "./pages/Authentication/AdminAuth/AdminRegister.tsx";
 import AdminWalkthrough from "./pages/Authentication/AdminAuth/AdminWalkthrough.tsx";
+import AddShop from "./pages/AdminDashboard/AddShop.tsx";
+import ClientLogin from "./pages/Authentication/ClientAuth/ClientLogin.tsx";
+import ClientRegister from "./pages/Authentication/ClientAuth/ClientRegister.tsx";
+import ClientWalkthrough from "./pages/Authentication/ClientAuth/ClientWalkthrough.tsx";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +48,21 @@ const router = createBrowserRouter([
   },
 
   {
+    path: "client-login",
+    element: <ClientLogin />,
+  },
+
+  {
+    path: "client-register",
+    element: <ClientRegister />,
+  },
+
+  {
+    path: "client-walkthrough",
+    element: <ClientWalkthrough />,
+  },
+
+  {
     path: "admin-login",
     element: <AdminLogin />,
   },
@@ -56,6 +75,11 @@ const router = createBrowserRouter([
   {
     path: "admin-walkthrough",
     element: <AdminWalkthrough />,
+  },
+
+  {
+    path: "add-shop",
+    element: <AddShop />,
   },
 
   {

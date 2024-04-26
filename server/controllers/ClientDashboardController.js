@@ -3,50 +3,53 @@ const sqlite = require("better-sqlite3");
 const db = new sqlite("./database.db");
 
 module.exports = {
-  getClientOngoingFiles: (req, res) => {
-    const userShopName = req.user.shop;
-    const userId = req.user.user_id;
+  submitProof: (req, res) => {
+    const user = req.user;
+
+    const { shopId, shopName } = req.body;
+    const personalPhoto = req.files["personalPhoto"][0];
+    const proofOfWork = req.files["proofOfWork"][0];
+
+    if (!shopId || !shopName || !personalPhoto || !proofOfWork) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
+    }
+
+    const insertStmt = db.prepare(
+      "INSERT INTO pending (shop_id, shop_name, personal_photo, proof_of_work, user_id) VALUES (?, ?, ?, ?, ?)"
+    );
 
     try {
-      const isClient = db
-        .prepare("SELECT is_client FROM users WHERE user_id = ?")
-        .get(userId);
+      const result = insertStmt.run(
+        shopId,
+        shopName,
+        personalPhoto.filename,
+        proofOfWork.filename,
+        user.user_id
+      );
 
-      if (!isClient || isClient.is_client !== "yes") {
-        return res.json([]);
+      if (result.changes === 1) {
+        console.log(
+          `A row has been inserted with rowid ${result.lastInsertRowid}`
+        );
+        res.json({ message: "Proof submitted successfully" });
+      } else {
+        console.error("Failed to insert proof");
+        res.status(500).json({ message: "Failed to submit proof" });
       }
-
-      const ongoingFiles = db
-        .prepare("SELECT * FROM files WHERE shop = ? AND status = 'ongoing'")
-        .all(userShopName);
-
-      res.json(ongoingFiles);
     } catch (err) {
-      console.error("Error retrieving ongoing client shop files:", err);
-      res.status(500).json({ message: "Internal server error" });
+      console.error("Error inserting data into database:", err);
+      res.status(500).json({ message: "Error submitting proof" });
     }
   },
 
-  getClientCompletedFiles: (req, res) => {
-    const userShopName = req.user.shop;
-    const userId = req.user.user_id;
-
+  getAllShops: (req, res) => {
     try {
-      const isClient = db
-        .prepare("SELECT is_client FROM users WHERE user_id = ?")
-        .get(userId);
-
-      if (!isClient || isClient.is_client !== "yes") {
-        return res.json([]);
-      }
-
-      const completedFiles = db
-        .prepare("SELECT * FROM files WHERE shop = ? AND status = 'completed'")
-        .all(userShopName);
-
-      res.json(completedFiles);
+      const shops = db.prepare("SELECT * FROM shops").all();
+      res.json(shops);
     } catch (err) {
-      console.error("Error retrieving completed client shop files:", err);
+      console.error("Error retrieving shops:", err);
       res.status(500).json({ message: "Internal server error" });
     }
   },

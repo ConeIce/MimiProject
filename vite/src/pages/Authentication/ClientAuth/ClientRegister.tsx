@@ -15,11 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 
-export default function AdminRegister() {
+export default function ClientRegister() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [adminSecret, setAdminSecret] = useState("");
+  const [clientSecret, setClientSecret] = useState("");
   const navigate = useNavigate(); // Initialize useNavigate
 
   const { toast } = useToast();
@@ -27,14 +27,14 @@ export default function AdminRegister() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if the admin secret is correct
-    if (adminSecret !== "kuboos") {
+    // Check if the client secret is correct
+    if (clientSecret !== "sambar") {
       toast({
-        title: "Invalid admin secret",
+        title: "Invalid client secret",
         description:
-          "Please enter the correct admin secret to register as admin",
+          "Please enter the correct client secret to register as a client",
       });
-      return; // Prevent registration if admin secret is incorrect
+      return; // Prevent registration if client secret is incorrect
     }
 
     try {
@@ -44,7 +44,7 @@ export default function AdminRegister() {
           username,
           email,
           password,
-          role: "admin",
+          role: "client",
         },
         { withCredentials: true }
       );
@@ -54,8 +54,8 @@ export default function AdminRegister() {
         description: `Welcome ${username}`,
       });
 
-      // Redirect to admin login page
-      navigate("/admin-login");
+      // Redirect to client login page
+      navigate("/client-login");
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
@@ -80,7 +80,7 @@ export default function AdminRegister() {
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Register</CardTitle>
-          <CardDescription>Register a new admin</CardDescription>
+          <CardDescription>Register a new client</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent>
@@ -116,19 +116,19 @@ export default function AdminRegister() {
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="framework">Admin Secret</Label>
+                <Label htmlFor="framework">Client Secret</Label>
                 <Input
-                  placeholder="Admin secret"
+                  placeholder="Client secret"
                   type="password"
-                  value={adminSecret}
-                  onChange={(e) => setAdminSecret(e.target.value)}
+                  value={clientSecret}
+                  onChange={(e) => setClientSecret(e.target.value)}
                   required
                 />
               </div>
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Link to="/admin-login">
+            <Link to="/client-login">
               <Button variant="outline">Have an account? Login</Button>
             </Link>
             <Button type="submit">Register</Button>

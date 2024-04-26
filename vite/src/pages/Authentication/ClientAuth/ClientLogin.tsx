@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
@@ -15,47 +15,36 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 
-export default function AdminRegister() {
+export default function ClientLogin() {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [adminSecret, setAdminSecret] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
-
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if the admin secret is correct
-    if (adminSecret !== "kuboos") {
-      toast({
-        title: "Invalid admin secret",
-        description:
-          "Please enter the correct admin secret to register as admin",
-      });
-      return; // Prevent registration if admin secret is incorrect
-    }
-
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/register",
+        "http://localhost:3000/auth/login",
         {
           username,
-          email,
           password,
-          role: "admin",
+          role: "client",
         },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        }
       );
 
-      toast({
-        title: "Registration successful",
-        description: `Welcome ${username}`,
-      });
-
-      // Redirect to admin login page
-      navigate("/admin-login");
+      if (response.data.role === "client") {
+        navigate("/client-walkthrough");
+      } else {
+        toast({
+          title: "Unauthorized",
+          description: "Only client users can access the client dashboard.",
+        });
+      }
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
@@ -63,15 +52,20 @@ export default function AdminRegister() {
             title: "Oops. Error 400.",
             description: error.response.data,
           });
-        }
-
-        if (error.response.status === 500) {
+        } else if (error.response.status === 500) {
           toast({
             title: "Oops. Error 500. Not your fault",
             description: error.response.data,
           });
+        } else {
+          toast({
+            title: `Oops. Error ${error.response.status}`,
+            description: error.response.data,
+          });
         }
       }
+
+      console.error("Error logging in:", error);
     }
   };
 
@@ -79,8 +73,8 @@ export default function AdminRegister() {
     <div className="flex items-center justify-center h-screen bg-login bg-no-repeat bg-center bg-cover">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Register</CardTitle>
-          <CardDescription>Register a new admin</CardDescription>
+          <CardTitle>Login to client dashboard</CardTitle>
+          <CardDescription>Access the client dashboard.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent>
@@ -96,16 +90,6 @@ export default function AdminRegister() {
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="framework">Email</Label>
-                <Input
-                  placeholder="Your email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="framework">Password</Label>
                 <Input
                   placeholder="Your password"
@@ -115,23 +99,13 @@ export default function AdminRegister() {
                   required
                 />
               </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="framework">Admin Secret</Label>
-                <Input
-                  placeholder="Admin secret"
-                  type="password"
-                  value={adminSecret}
-                  onChange={(e) => setAdminSecret(e.target.value)}
-                  required
-                />
-              </div>
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Link to="/admin-login">
-              <Button variant="outline">Have an account? Login</Button>
+            <Link to="/client-register">
+              <Button variant="outline">Register new client</Button>
             </Link>
-            <Button type="submit">Register</Button>
+            <Button type="submit">Login</Button>
           </CardFooter>
         </form>
       </Card>

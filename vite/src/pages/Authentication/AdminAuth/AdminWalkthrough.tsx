@@ -17,6 +17,7 @@ import { Label } from "@radix-ui/react-label";
 
 export default function AdminWalkthrough() {
   const [shopName, setShopName] = useState("");
+  const [shopLocation, setShopLocation] = useState("");
   const [shopsExist, setShopsExist] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -28,8 +29,12 @@ export default function AdminWalkthrough() {
   const checkShopsExistence = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/admin-dash/shops"
+        "http://localhost:3000/admin-dash/allshops",
+        {
+          withCredentials: true,
+        }
       );
+      console.log(response.data);
       if (response.data.length > 0) {
         setShopsExist(true);
       }
@@ -46,6 +51,7 @@ export default function AdminWalkthrough() {
         "http://localhost:3000/admin-dash/shop",
         {
           shopName,
+          shopLocation, // Include shop location in the request
         },
         {
           withCredentials: true,
@@ -99,9 +105,16 @@ export default function AdminWalkthrough() {
                     onChange={(e) => setShopName(e.target.value)}
                     required
                   />
-                  <p className="text-sm text-slate-600 mt-3">
-                    This can be changed at any time
-                  </p>
+                </div>
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="location">Shop Location</Label>
+                  <Input
+                    placeholder="Your shop location"
+                    type="text"
+                    value={shopLocation}
+                    onChange={(e) => setShopLocation(e.target.value)}
+                    required
+                  />
                 </div>
               </div>
             </CardContent>

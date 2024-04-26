@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
@@ -6,14 +7,22 @@ import axios from "axios";
 export default function AddShop() {
   const [shopName, setShopName] = useState("");
   const [shopLocation, setShopLocation] = useState("");
+  const navigate = useNavigate();
 
   const handleAddShop = async () => {
     try {
-      await axios.post("http://localhost:3000/admin-dash/add-shop", {
-        shopName,
-        shopLocation,
-      });
+      await axios.post(
+        "http://localhost:3000/admin-dash/shop",
+        {
+          shopName,
+          shopLocation,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       console.log("Shop added successfully");
+      navigate("/admin-dashboard"); // Redirect to admin dashboard
     } catch (error) {
       console.error("Error adding shop:", error);
     }

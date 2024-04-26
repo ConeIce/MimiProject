@@ -28,7 +28,6 @@ module.exports = {
           username: req.user.username,
           role: req.user.role,
           email: req.user.email,
-          new: req.user.new,
           user_id: req.user.user_id,
         };
 

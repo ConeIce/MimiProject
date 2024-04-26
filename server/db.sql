@@ -45,6 +45,17 @@ CREATE TABLE IF NOT EXISTS routes (
     route_link TEXT,
     FOREIGN KEY(shop_id) REFERENCES shops(shop_id)
 );
+
+CREATE TABLE IF NOT EXISTS pending (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    shop_id INT,
+    personal_photo TEXT NOT NULL VARCHAR(255),
+	proof_of_work TEXT NOT NULL VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (shop_id) REFERENCES shops(id)
+);
+
 	
 
 SELECT file_id, filename, shop_name from files

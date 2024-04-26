@@ -41,11 +41,7 @@ export default function AdminLogin() {
       );
       console.log(response.data);
 
-      if (response.data.new) {
-        navigate("/admin-walkthrough");
-      } else {
-        navigate("/admin-dashboard");
-      }
+      navigate("/admin-walkthrough");
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
