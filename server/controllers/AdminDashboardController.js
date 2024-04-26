@@ -77,7 +77,6 @@ module.exports = {
     const { shopId } = req.params;
 
     try {
-      // Retrieve data from the pending table
       const pendingQuery = `
       SELECT user_id, shop_id, personal_photo, proof_of_work
       FROM pending
@@ -89,7 +88,6 @@ module.exports = {
         return res.status(404).json({ message: "Pending shop not found" });
       }
 
-      // Retrieve additional data from the users table
       const userQuery = `
       SELECT username, email
       FROM users
@@ -97,7 +95,6 @@ module.exports = {
 
       const userData = await db.prepare(userQuery).get(pendingData.user_id);
 
-      // Retrieve additional data from the shops table
       const shopQuery = `
       SELECT shop_name, shop_location
       FROM shops
@@ -105,19 +102,16 @@ module.exports = {
 
       const shopData = await db.prepare(shopQuery).get(pendingData.shop_id);
 
-      // Read personal photo file from server storage
       const personalPhotoPath = `./proofs/${pendingData.personal_photo}`;
       const personalPhoto = fs.readFileSync(personalPhotoPath, {
         encoding: "base64",
       });
 
-      // Read proof of work photo file from server storage
       const proofOfWorkPath = `./proofs/${pendingData.proof_of_work}`;
       const proofOfWork = fs.readFileSync(proofOfWorkPath, {
         encoding: "base64",
       });
 
-      // Send the combined data to the frontend
       res.json({
         username: userData.username,
         email: userData.email,

@@ -38,7 +38,7 @@ export default function Dashboard() {
         }
       );
       console.log(response.data);
-      setPendingShops(response.data.slice(0, 5)); // Display only the first 5 pending shops
+      setPendingShops(response.data.slice(0, 5));
     } catch (error) {
       console.error("Error fetching pending shops:", error);
     }
@@ -53,7 +53,7 @@ export default function Dashboard() {
   };
 
   const handleSelectShop = (id) => {
-    navigate(`/approve-request?id=${id}`); // Navigate to approve-request with shop ID as query parameter
+    navigate(`/approve-request?id=${id}`);
   };
 
   return (

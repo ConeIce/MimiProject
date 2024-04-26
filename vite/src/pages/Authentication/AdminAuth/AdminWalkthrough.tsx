@@ -51,7 +51,7 @@ export default function AdminWalkthrough() {
         "http://localhost:3000/admin/shop",
         {
           shopName,
-          shopLocation, // Include shop location in the request
+          shopLocation,
         },
         {
           withCredentials: true,
