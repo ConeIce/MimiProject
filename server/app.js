@@ -18,6 +18,7 @@ const passportLocal = require("passport-local");
 const cookieParser = require("cookie-parser");
 
 const isLoggedIn = require("./middleware/isLoggedIn.js");
+const isLoggedInAsAdmin = require("./middleware/isLoggedInAsAdmin.js");
 
 const corsOptions = {
   origin: "http://localhost:5173",
@@ -36,7 +37,6 @@ app.use(cookieParser("bigboysecurity"));
 
 app.use(
   session({
-    // proxy: process.env.ENV === "production",
     store: new SqliteStore({
       client: sessionsDB,
     }),
@@ -49,7 +49,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 const passportConfig = require("./passportConfig.js");
-const isLoggedInAsAdmin = require("./middleware/isLoggedInAsAdmin.js");
 const isLoggedInAsClient = require("./middleware/isLoggedInAsClient.js");
 passportConfig(passport);
 

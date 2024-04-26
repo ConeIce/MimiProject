@@ -21,6 +21,7 @@ import AddShop from "./pages/AdminDashboard/AddShop.tsx";
 import ClientLogin from "./pages/Authentication/ClientAuth/ClientLogin.tsx";
 import ClientRegister from "./pages/Authentication/ClientAuth/ClientRegister.tsx";
 import ClientWalkthrough from "./pages/Authentication/ClientAuth/ClientWalkthrough.tsx";
+import ApproveRequest from "./pages/AdminDashboard/ApproveRequest.tsx";
 
 const router = createBrowserRouter([
   {
@@ -80,6 +81,11 @@ const router = createBrowserRouter([
   {
     path: "add-shop",
     element: <AddShop />,
+  },
+
+  {
+    path: "approve-request",
+    element: <ApproveRequest />,
   },
 
   {

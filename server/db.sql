@@ -4,13 +4,18 @@ CREATE TABLE IF NOT EXISTS users (
 	email TEXT UNIQUE,
 	password TEXT NOT NULL,
 	role TEXT NOT NULL, -- admin | user
-	new BOOLEAN DEFAULT 1
+	new BOOLEAN DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS shops (
 	shop_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	user_id INTEGER,
 	shop_name TEXT UNIQUE,
+	shop_location TEXT,
+
+	lat NUMBER DEFAULT NULL,
+	lng NUMBER DEFAULT NULL,
+
 	FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 
@@ -47,16 +52,14 @@ CREATE TABLE IF NOT EXISTS routes (
 );
 
 CREATE TABLE IF NOT EXISTS pending (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    shop_id INT,
-    personal_photo TEXT NOT NULL VARCHAR(255),
-	proof_of_work TEXT NOT NULL VARCHAR(255),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (shop_id) REFERENCES shops(id)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    shop_id INTEGER,
+    personal_photo TEXT NOT NULL,
+    proof_of_work TEXT NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(user_id),
+    FOREIGN KEY(shop_id) REFERENCES shops(shop_id)
 );
-
-	
 
 SELECT file_id, filename, shop_name from files
 JOIN shops ON files.shop_id = shops.shop_id
