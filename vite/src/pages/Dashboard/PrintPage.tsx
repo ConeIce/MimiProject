@@ -89,7 +89,7 @@ export default function PrintPage() {
   });
 
   const [formData, setFormData] = useState<z.infer<typeof FormSchema>>({
-    shopId: 0,
+    shopId: "",
     paperSize: "A4",
     orientation: "Portrait",
     file: undefined,

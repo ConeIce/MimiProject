@@ -7,7 +7,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import DashboardPage from "./pages/Dashboard/DashboardPage.tsx";
 import PrintPage from "./pages/Dashboard/PrintPage.tsx";
-import ForgotPage from "./pages/Authentication/ForgotPage.tsx";
 import LoginPage from "./pages/Authentication/LoginPage.tsx";
 import RegisterPage from "./pages/Authentication/RegisterPage.tsx";
 import AllPrintsPage from "./pages/Dashboard/AllPrintsPage.tsx";
@@ -21,6 +20,7 @@ import AddShop from "./pages/AdminDashboard/AddShop.tsx";
 import ClientLogin from "./pages/Authentication/ClientAuth/ClientLogin.tsx";
 import ClientRegister from "./pages/Authentication/ClientAuth/ClientRegister.tsx";
 import ClientWalkthrough from "./pages/Authentication/ClientAuth/ClientWalkthrough.tsx";
+import SettingsPage from "./pages/AdminDashboard/SettingsPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -63,17 +63,32 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "admin-login",
+    path: "client-login",
+    element: <ClientLogin />,
+  },
+
+  {
+    path: "client-register",
+    element: <ClientRegister />,
+  },
+
+  {
+    path: "client-walkthrough",
+    element: <ClientWalkthrough />,
+  },
+
+  {
+    path: "admin/login",
     element: <AdminLogin />,
   },
 
   {
-    path: "admin-register",
+    path: "admin/register",
     element: <AdminRegister />,
   },
 
   {
-    path: "admin-walkthrough",
+    path: "admin/walkthrough",
     element: <AdminWalkthrough />,
   },
 
@@ -83,7 +98,12 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/admin-dashboard",
+    path: "add-shop",
+    element: <AddShop />,
+  },
+
+  {
+    path: "/admin/dashboard",
     element: <AdminDashboard />,
 
     children: [
@@ -94,6 +114,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Dashboard />,
+      },
+      {
+        path: "settings",
+        element: <SettingsPage />,
       },
     ],
   },

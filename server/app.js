@@ -11,6 +11,7 @@ const AuthRoute = require("./routes/auth.js");
 const DashboardRoute = require("./routes/dashboard.js");
 const AdminDashboardRoute = require("./routes/adminDashboard.js");
 const ClientDashboardRoute = require("./routes/clientDashboard.js");
+const ShopRoute = require("./routes/shop.js");
 
 const passport = require("passport");
 const passportLocal = require("passport-local");
@@ -18,6 +19,7 @@ const passportLocal = require("passport-local");
 const cookieParser = require("cookie-parser");
 
 const isLoggedIn = require("./middleware/isLoggedIn.js");
+const isLoggedInAsAdmin = require("./middleware/isLoggedInAsAdmin.js");
 
 const corsOptions = {
   origin: "http://localhost:5173",
@@ -36,7 +38,6 @@ app.use(cookieParser("bigboysecurity"));
 
 app.use(
   session({
-    // proxy: process.env.ENV === "production",
     store: new SqliteStore({
       client: sessionsDB,
     }),
@@ -50,12 +51,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 const passportConfig = require("./passportConfig.js");
 const isLoggedInAsAdmin = require("./middleware/isLoggedInAsAdmin.js");
-const isLoggedInAsClient = require("./middleware/isLoggedInAsClient.js");
 passportConfig(passport);
 
 app.use("/auth", AuthRoute);
 app.use("/dash", isLoggedIn, DashboardRoute);
-app.use("/client-dash", isLoggedInAsClient, ClientDashboardRoute);
 app.use("/admin-dash", isLoggedInAsAdmin, AdminDashboardRoute);
 
 app.post("/forgot-password", (req, res) => {
