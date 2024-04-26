@@ -7,7 +7,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import DashboardPage from "./pages/Dashboard/DashboardPage.tsx";
 import PrintPage from "./pages/Dashboard/PrintPage.tsx";
-import ForgotPage from "./pages/Authentication/ForgotPage.tsx";
 import LoginPage from "./pages/Authentication/LoginPage.tsx";
 import RegisterPage from "./pages/Authentication/RegisterPage.tsx";
 import AllPrintsPage from "./pages/Dashboard/AllPrintsPage.tsx";
@@ -22,6 +21,7 @@ import ClientLogin from "./pages/Authentication/ClientAuth/ClientLogin.tsx";
 import ClientRegister from "./pages/Authentication/ClientAuth/ClientRegister.tsx";
 import ClientWalkthrough from "./pages/Authentication/ClientAuth/ClientWalkthrough.tsx";
 import ApproveRequest from "./pages/AdminDashboard/ApproveRequest.tsx";
+import SettingsPage from "./pages/AdminDashboard/SettingsPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +46,21 @@ const router = createBrowserRouter([
         element: <AllPrintsPage />,
       },
     ],
+  },
+
+  {
+    path: "client-login",
+    element: <ClientLogin />,
+  },
+
+  {
+    path: "client-register",
+    element: <ClientRegister />,
+  },
+
+  {
+    path: "client-walkthrough",
+    element: <ClientWalkthrough />,
   },
 
   {
@@ -89,6 +104,11 @@ const router = createBrowserRouter([
   },
 
   {
+    path: "add-shop",
+    element: <AddShop />,
+  },
+
+  {
     path: "/admin-dashboard",
     element: <AdminDashboard />,
 
@@ -100,6 +120,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Dashboard />,
+      },
+      {
+        path: "settings",
+        element: <SettingsPage />,
       },
     ],
   },

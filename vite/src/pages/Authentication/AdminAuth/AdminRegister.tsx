@@ -126,7 +126,7 @@ export default function AdminRegister() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Link to="/admin-login">
+            <Link to="/admin/login">
               <Button variant="outline">Have an account? Login</Button>
             </Link>
             <Button type="submit">Register</Button>

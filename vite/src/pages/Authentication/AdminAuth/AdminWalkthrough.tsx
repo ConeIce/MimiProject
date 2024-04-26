@@ -48,7 +48,7 @@ export default function AdminWalkthrough() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/admin-dash/shop",
+        "http://localhost:3000/admin/shop",
         {
           shopName,
           shopLocation,
@@ -59,7 +59,7 @@ export default function AdminWalkthrough() {
       );
 
       console.log(response.data);
-      navigate("/admin-dashboard");
+      navigate("/admin/dashboard");
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
