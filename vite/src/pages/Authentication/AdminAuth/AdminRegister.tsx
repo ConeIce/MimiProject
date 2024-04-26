@@ -20,21 +20,20 @@ export default function AdminRegister() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [adminSecret, setAdminSecret] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const { toast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if the admin secret is correct
     if (adminSecret !== "kuboos") {
       toast({
         title: "Invalid admin secret",
         description:
           "Please enter the correct admin secret to register as admin",
       });
-      return; // Prevent registration if admin secret is incorrect
+      return;
     }
 
     try {
@@ -54,7 +53,6 @@ export default function AdminRegister() {
         description: `Welcome ${username}`,
       });
 
-      // Redirect to admin login page
       navigate("/admin-login");
     } catch (error) {
       if (error.response) {

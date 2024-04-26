@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
@@ -20,21 +20,20 @@ export default function ClientRegister() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [clientSecret, setClientSecret] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const { toast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if the client secret is correct
     if (clientSecret !== "sambar") {
       toast({
         title: "Invalid client secret",
         description:
           "Please enter the correct client secret to register as a client",
       });
-      return; // Prevent registration if client secret is incorrect
+      return;
     }
 
     try {
@@ -55,7 +54,6 @@ export default function ClientRegister() {
         description: `Welcome ${username}`,
       });
 
-      // Redirect to client login page
       navigate("/client-login");
     } catch (error) {
       if (error.response) {

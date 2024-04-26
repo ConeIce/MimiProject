@@ -22,7 +22,7 @@ export default function AddShop() {
         }
       );
       console.log("Shop added successfully");
-      navigate("/admin-dashboard"); // Redirect to admin dashboard
+      navigate("/admin-dashboard");
     } catch (error) {
       console.error("Error adding shop:", error);
     }

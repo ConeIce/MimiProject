@@ -28,7 +28,7 @@ export default function ClientWalkthrough() {
 
   useEffect(() => {
     checkShopsExistence();
-    fetchShopsList(); // Fetch all shops for the dropdown
+    fetchShopsList();
   }, []);
 
   const checkShopsExistence = async () => {
@@ -65,7 +65,6 @@ export default function ClientWalkthrough() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Perform validation for proof of work (personal photo and proof of work photo)
     if (!personalPhoto || !proofOfWork) {
       toast({
         title: "Proof of work required",
@@ -80,9 +79,9 @@ export default function ClientWalkthrough() {
 
     try {
       const formData = new FormData();
-      formData.append("shopId", selectedShop); // Include selected shop ID
-      formData.append("personalPhoto", personalPhoto); // Append personal photo to form data
-      formData.append("proofOfWork", proofOfWork); // Append proof of work photo to form data
+      formData.append("shopId", selectedShop);
+      formData.append("personalPhoto", personalPhoto);
+      formData.append("proofOfWork", proofOfWork);
 
       const response = await axios.post(
         "http://localhost:3000/client-dash/submitProof",
