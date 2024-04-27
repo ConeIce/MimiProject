@@ -38,7 +38,7 @@ export default function ClientLogin() {
       );
 
       if (response.data.role === "client") {
-        navigate("/client-walkthrough");
+        navigate("/client/walkthrough");
       } else {
         toast({
           title: "Unauthorized",
@@ -102,7 +102,7 @@ export default function ClientLogin() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Link to="/client-register">
+            <Link to="/client/register">
               <Button variant="outline">Register new client</Button>
             </Link>
             <Button type="submit">Login</Button>

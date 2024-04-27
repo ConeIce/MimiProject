@@ -1,7 +1,6 @@
 const sqlite = require("better-sqlite3");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
-
 const db = new sqlite("./database.db");
 
 const validateEmail = (email) => {
@@ -41,6 +40,7 @@ module.exports = {
 
     const { username, email, password } = req.body;
     const role = req.body.role || "user";
+    const fresh = req.body.new || 0;
 
     if (!username || !email || !password) {
       return res.status(400).send("Username, email, and password are required");
@@ -84,9 +84,15 @@ module.exports = {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const insertUserStmt = db.prepare(
-        "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)"
+        "INSERT INTO users (username, email, password, role, new) VALUES (?, ?, ?, ?, ?)"
       );
-      const result = insertUserStmt.run(username, email, hashedPassword, role);
+      const result = insertUserStmt.run(
+        username,
+        email,
+        hashedPassword,
+        role,
+        fresh
+      );
 
       if (result.changes === 1) {
         console.log(
@@ -97,83 +103,6 @@ module.exports = {
         console.error("Failed to insert user");
         res.status(500).send("Failed to create user");
       }
-    }
-  },
-
-  registerClient: async (req, res) => {
-    const { username, email, password, shopName, phoneNumber } = req.body;
-    const role = req.body.role || "user";
-    const file = req.file;
-
-    if (
-      !username ||
-      !email ||
-      !password ||
-      !shopName ||
-      !file ||
-      !phoneNumber
-    ) {
-      return res.status(400).json({
-        message:
-          "Username, email, password, shopName, phoneNumber, and file are required",
-      });
-    }
-
-    if (!validateEmail(email)) {
-      return res.status(400).json({
-        message: "Invalid email address",
-      });
-    }
-
-    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
-    const numberRegex = /\d/;
-    if (
-      password.length < 6 ||
-      !specialCharRegex.test(password) ||
-      !numberRegex.test(password)
-    ) {
-      return res.status(400).json({
-        message:
-          "Password must be at least 6 characters long and contain at least one special character and one number",
-      });
-    }
-
-    const phoneRegex = /^\d{10}$/;
-    if (!phoneRegex.test(phoneNumber)) {
-      return res.status(400).json({
-        message:
-          "Invalid phone number. Phone number must contain exactly 10 digits",
-      });
-    }
-
-    try {
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      const insertUserStmt = db.prepare(
-        "INSERT INTO users (username, email, password, role, file_path, shop_name, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?)"
-      );
-      const result = insertUserStmt.run(
-        username,
-        email,
-        hashedPassword,
-        role,
-        file.path,
-        shopName,
-        phoneNumber
-      );
-
-      if (result.changes === 1) {
-        console.log(
-          `A row has been inserted with rowid ${result.lastInsertRowid}`
-        );
-        res.json({ message: "User Created" });
-      } else {
-        console.error("Failed to insert user");
-        res.status(500).json({ message: "Failed to create user" });
-      }
-    } catch (err) {
-      console.error("Error registering user:", err);
-      res.status(500).json({ message: "Error registering user" });
     }
   },
 };

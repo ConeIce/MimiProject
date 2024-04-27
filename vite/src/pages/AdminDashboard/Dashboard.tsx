@@ -17,7 +17,7 @@ export default function Dashboard() {
   const fetchShops = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/admin-dash/searchShop?search=${searchTerm}`,
+        `http://localhost:3000/shop/searchShop?search=${searchTerm}`,
         {
           withCredentials: true,
         }
@@ -32,7 +32,7 @@ export default function Dashboard() {
   const fetchPendingShops = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/admin-dash/pendingShops",
+        "http://localhost:3000/admin/pendingShops",
         {
           withCredentials: true,
         }
@@ -45,7 +45,7 @@ export default function Dashboard() {
   };
 
   const handleAddShop = () => {
-    navigate("/add-shop");
+    navigate("/admin/dashboard/addShop");
   };
 
   const handleSearch = () => {
@@ -53,40 +53,37 @@ export default function Dashboard() {
   };
 
   const handleSelectShop = (id) => {
-    navigate(`/approve-request?id=${id}`);
+    navigate(`/admin/dashboard/shop?id=${id}`);
   };
 
   return (
     <div className="p-10 px-16 w-full">
-      <h1 className="text-2xl">Shop Settings</h1>
-
-      <div className="mt-4 flex items-center">
+      <div className="mb-4">
         <Label>Search Shop</Label>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search by shop name..."
-          className="block w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 mt-1"
-        />
-        <button
-          className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md"
-          onClick={handleSearch}
-        >
-          Search
-        </button>
-      </div>
-
-      <div>
-        <Label>Shop Name</Label>
-        <div className="flex flex-wrap gap-4 mt-3">
+        <div className="flex bg-gray-200 border border-gray-300 rounded-md mb-4">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search shop by name..."
+            className="flex-grow px-4 py-2 focus:outline-none"
+          />
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded-md"
-            onClick={handleAddShop}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            onClick={handleSearch}
           >
-            Add Shop
+            Search
           </button>
         </div>
+      </div>
+
+      <div className="mb-4">
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded-md"
+          onClick={handleAddShop}
+        >
+          Add Shop
+        </button>
       </div>
 
       <hr className="my-8 border-gray-300" />
@@ -98,6 +95,23 @@ export default function Dashboard() {
             <button
               key={shop.shop_id}
               className="bg-yellow-500 text-white px-4 py-2 rounded-md"
+              onClick={() => handleSelectShop(shop.shop_id)}
+            >
+              {shop.shop_name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <hr className="my-8 border-gray-300" />
+
+      <div className="mt-8">
+        <h2 className="text-xl">Search Results</h2>
+        <div className="mt-3">
+          {shops.map((shop) => (
+            <button
+              key={shop.shop_id}
+              className="bg-indigo-500 text-white px-4 py-2 rounded-md mr-4 mb-4"
               onClick={() => handleSelectShop(shop.shop_id)}
             >
               {shop.shop_name}

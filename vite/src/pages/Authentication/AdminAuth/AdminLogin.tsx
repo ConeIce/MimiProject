@@ -39,7 +39,7 @@ export default function AdminLogin() {
       );
       console.log(response.data);
 
-      navigate("/admin-walkthrough");
+      navigate("/admin/walkthrough");
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {

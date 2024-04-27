@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
+import { Button } from "@/components/ui/button";
 
 export default function AddShop() {
   const [shopName, setShopName] = useState("");
@@ -29,10 +30,10 @@ export default function AddShop() {
   };
 
   return (
-    <div className="p-10 px-16 w-full">
-      <h1 className="text-2xl">Add Shop</h1>
+    <div className="p-8">
+      <h2 className="text-3xl mb-8">Add Shop</h2>
 
-      <div>
+      <div className="mb-6">
         <Label>Shop Name</Label>
         <Input
           type="text"
@@ -43,7 +44,7 @@ export default function AddShop() {
         />
       </div>
 
-      <div className="mt-6">
+      <div className="mb-6">
         <Label>Shop Location</Label>
         <Input
           type="text"
@@ -54,12 +55,12 @@ export default function AddShop() {
         />
       </div>
 
-      <button
-        className="bg-green-500 text-white px-4 py-2 mt-8 rounded-md"
+      <Button
         onClick={handleAddShop}
+        className="bg-green-500 text-white px-4 py-2 rounded-md"
       >
         Add Shop
-      </button>
+      </Button>
     </div>
   );
 }

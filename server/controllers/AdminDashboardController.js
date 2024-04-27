@@ -1,6 +1,5 @@
 const sqlite = require("better-sqlite3");
 const fs = require("fs");
-
 const db = new sqlite("./database.db");
 
 module.exports = {
@@ -24,33 +23,6 @@ module.exports = {
 
     res.json("Admin Dashboard Route");
   },
-  getAllShops: (req, res) => {
-    try {
-      const shops = db.prepare("SELECT * FROM shops").all();
-      res.json(shops);
-    } catch (err) {
-      console.error("Error retrieving shops:", err);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  },
-
-  searchShop: async (req, res) => {
-    const searchTerm = req.query.search;
-
-    try {
-      const query = `
-      SELECT * 
-      FROM shops 
-      WHERE LOWER(shop_name) LIKE '%' || ? || '%'`;
-
-      const result = await db.prepare(query).all(searchTerm.toLowerCase());
-
-      res.json(result);
-    } catch (error) {
-      console.error("Error fetching shops:", error);
-      res.status(500).json({ message: "Error fetching shops" });
-    }
-  },
 
   pendingShops: async (req, res) => {
     try {
@@ -72,53 +44,53 @@ module.exports = {
   },
 
   clientRequest: async (req, res) => {
-    console.log("hey");
+    const { shop_id } = req.params;
+    console.log(shop_id);
     console.log(req.params);
-    const { shopId } = req.params;
+    console.log("ehy");
 
     try {
       const pendingQuery = `
-      SELECT user_id, shop_id, personal_photo, proof_of_work
-      FROM pending
-      WHERE shop_id = ?`;
+        SELECT user_id, shop_id, personal_photo, proof_of_work
+        FROM pending
+        WHERE shop_id = ?`;
 
-      const pendingData = await db.prepare(pendingQuery).get(shopId);
+      const pendingData = await db.prepare(pendingQuery).all(shop_id);
 
-      if (!pendingData) {
+      if (!pendingData || pendingData.length === 0) {
         return res.status(404).json({ message: "Pending shop not found" });
       }
 
-      const userQuery = `
-      SELECT username, email
-      FROM users
-      WHERE user_id = ?`;
+      const userDetailsPromises = pendingData.map(async (pendingItem) => {
+        const userQuery = `
+          SELECT user_id, username, email
+          FROM users
+          WHERE user_id = ?`;
 
-      const userData = await db.prepare(userQuery).get(pendingData.user_id);
+        const userData = await db.prepare(userQuery).get(pendingItem.user_id);
+
+        return {
+          user_id: userData.user_id,
+          username: userData.username,
+          email: userData.email,
+          personal_photo: pendingItem.personal_photo,
+          proof_of_work: pendingItem.proof_of_work,
+        };
+      });
+
+      const userDetails = await Promise.all(userDetailsPromises);
 
       const shopQuery = `
-      SELECT shop_name, shop_location
-      FROM shops
-      WHERE shop_id = ?`;
+        SELECT shop_name, shop_location
+        FROM shops
+        WHERE shop_id = ?`;
 
-      const shopData = await db.prepare(shopQuery).get(pendingData.shop_id);
-
-      const personalPhotoPath = `./proofs/${pendingData.personal_photo}`;
-      const personalPhoto = fs.readFileSync(personalPhotoPath, {
-        encoding: "base64",
-      });
-
-      const proofOfWorkPath = `./proofs/${pendingData.proof_of_work}`;
-      const proofOfWork = fs.readFileSync(proofOfWorkPath, {
-        encoding: "base64",
-      });
+      const shopData = await db.prepare(shopQuery).get(pendingData[0].shop_id);
 
       res.json({
-        username: userData.username,
-        email: userData.email,
         shop_name: shopData.shop_name,
         shop_location: shopData.shop_location,
-        personal_photo: personalPhoto,
-        proof_of_work: proofOfWork,
+        users: userDetails,
       });
     } catch (error) {
       console.error("Error fetching pending shop:", error);
@@ -126,79 +98,46 @@ module.exports = {
     }
   },
 
-  getUsersByShop: (req, res) => {
-    const shopId = req.params.shopId;
+  approveRequest: async (req, res) => {
+    console.log("hey");
+    const { user_id, shop_id } = req.body;
 
     try {
-      const users = db
-        .prepare(
-          `
-        SELECT u.username, u.email, u.role 
-        FROM users u
-        WHERE EXISTS (
-          SELECT 1 FROM client_requests cr
-          WHERE cr.user_id = u.user_id AND cr.shop_id = ?
-        )
-      `
-        )
-        .all(shopId);
+      const updateQuery = `
+        UPDATE users
+        SET new = 0
+        WHERE user_id = ?`;
+      await db.prepare(updateQuery).run(user_id);
 
-      res.json(users);
-    } catch (err) {
-      console.error("Error retrieving users by shop:", err);
-      res.status(500).json({ message: "Internal server error" });
+      const deleteQuery = `
+        DELETE FROM pending
+        WHERE user_id = ?`;
+      await db.prepare(deleteQuery).run(user_id);
+
+      const insertQuery = `
+        INSERT INTO UserShop (user_id, shop_id)
+        VALUES (?, ?)`;
+      await db.prepare(insertQuery).run(user_id, shop_id);
+
+      res.status(200).json({ message: "User request approved successfully" });
+    } catch (error) {
+      console.error("Error approving user request:", error);
+      res.status(500).json({ message: "Error approving user request" });
     }
   },
-  approveClientRequest: (req, res) => {
-    const userId = req.params.userId;
-    const shopId = req.params.shopId;
 
+  rejectRequest: async (req, res) => {
     try {
-      const updateStmt = db.prepare(
-        "UPDATE users SET is_client = 'yes' WHERE user_id = ?"
-      );
-      const result = updateStmt.run(userId);
+      const deleteQuery = `
+        DELETE FROM pending
+        WHERE user_id = ?`;
 
-      if (result.changes === 1) {
-        db.prepare(
-          "DELETE FROM client_requests WHERE user_id = ? AND shop_id = ?"
-        ).run(userId, shopId);
+      await db.prepare(deleteQuery).run(req.body.user_id);
 
-        res.json({ message: "Client request approved successfully" });
-      } else {
-        res.status(500).json({ message: "Failed to approve client request" });
-      }
-    } catch (err) {
-      console.error("Error approving client request:", err);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  },
-  getShopOngoingFiles: (req, res) => {
-    const { shopName } = req.params;
-
-    try {
-      const ongoingFiles = db
-        .prepare("SELECT * FROM files WHERE shop = ? AND status = 'ongoing'")
-        .all(shopName);
-
-      res.json(ongoingFiles);
-    } catch (err) {
-      console.error("Error retrieving ongoing shop files:", err);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  },
-  getShopCompletedFiles: (req, res) => {
-    const { shopName } = req.params;
-
-    try {
-      const completedFiles = db
-        .prepare("SELECT * FROM files WHERE shop = ? AND status = 'completed'")
-        .all(shopName);
-
-      res.json(completedFiles);
-    } catch (err) {
-      console.error("Error retrieving completed shop files:", err);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(200).json({ message: "User request rejected successfully" });
+    } catch (error) {
+      console.error("Error rejecting user request:", error);
+      res.status(500).json({ message: "Error rejecting user request" });
     }
   },
 };
