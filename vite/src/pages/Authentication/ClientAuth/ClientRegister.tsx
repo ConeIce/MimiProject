@@ -54,7 +54,7 @@ export default function ClientRegister() {
         description: `Welcome ${username}`,
       });
 
-      navigate("/client-login");
+      navigate("/client/login");
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
@@ -127,7 +127,7 @@ export default function ClientRegister() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Link to="/client-login">
+            <Link to="/client/login">
               <Button variant="outline">Have an account? Login</Button>
             </Link>
             <Button type="submit">Register</Button>

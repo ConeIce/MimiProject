@@ -55,7 +55,9 @@ passportConfig(passport);
 
 app.use("/auth", AuthRoute);
 app.use("/dash", isLoggedIn, DashboardRoute);
-app.use("/admin-dash", isLoggedInAsAdmin, AdminDashboardRoute);
+app.use("/client", isLoggedInAsClient, ClientDashboardRoute);
+app.use("/admin", isLoggedInAsAdmin, AdminDashboardRoute);
+app.use("/shop", ShopRoute);
 
 app.post("/forgot-password", (req, res) => {
   const { email } = req.body;

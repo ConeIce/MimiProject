@@ -1,8 +1,36 @@
 const sqlite = require("better-sqlite3");
-
 const db = new sqlite("./database.db");
 
 module.exports = {
+  getAllShops: (req, res) => {
+    try {
+      const shops = db.prepare("SELECT * FROM shops").all();
+      res.json(shops);
+    } catch (err) {
+      console.error("Error retrieving shops:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
+  getShopById: async (req, res) => {
+    const { shop_id } = req.params;
+    try {
+      const shop = await db
+        .prepare("SELECT * FROM shops WHERE shop_id = ?")
+        .get(shop_id);
+
+      if (!shop) {
+        return res.status(404).json({ message: "Shop not found" });
+      }
+
+      console.log(shop);
+      res.json(shop);
+    } catch (err) {
+      console.error("Error retrieving shop:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
   getShop: (req, res) => {
     const userId = req.user.user_id;
 
@@ -22,6 +50,24 @@ module.exports = {
     } catch (err) {
       console.error("Error retrieving data from database:", err);
       return res.status(500).json("Internal server error");
+    }
+  },
+
+  searchShop: async (req, res) => {
+    const searchTerm = req.query.search;
+
+    try {
+      const query = `
+      SELECT * 
+      FROM shops 
+      WHERE LOWER(shop_name) LIKE '%' || ? || '%'`;
+
+      const result = await db.prepare(query).all(searchTerm.toLowerCase());
+
+      res.json(result);
+    } catch (error) {
+      console.error("Error fetching shops:", error);
+      res.status(500).json({ message: "Error fetching shops" });
     }
   },
 

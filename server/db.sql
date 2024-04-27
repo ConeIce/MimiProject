@@ -61,6 +61,14 @@ CREATE TABLE IF NOT EXISTS pending (
     FOREIGN KEY(shop_id) REFERENCES shops(shop_id)
 );
 
+CREATE TABLE IF NOT EXISTS UserShop (
+    user_id INTEGER,
+    shop_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (shop_id) REFERENCES Shops(shop_id)
+);
+
+
 SELECT file_id, filename, shop_name from files
 JOIN shops ON files.shop_id = shops.shop_id
 WHERE files.user_id = 3;

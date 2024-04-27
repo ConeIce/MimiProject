@@ -33,12 +33,9 @@ export default function ClientWalkthrough() {
 
   const checkShopsExistence = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:3000/client-dash/allshops",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get("http://localhost:3000/shop/all", {
+        withCredentials: true,
+      });
       console.log(response.data);
       if (response.data.length > 0) {
         setShopsExist(true);
@@ -50,12 +47,9 @@ export default function ClientWalkthrough() {
 
   const fetchShopsList = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:3000/client-dash/allshops",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get("http://localhost:3000/shop/all", {
+        withCredentials: true,
+      });
       setShopsList(response.data);
     } catch (error) {
       console.error("Error fetching shops list:", error);
@@ -84,7 +78,7 @@ export default function ClientWalkthrough() {
       formData.append("proofOfWork", proofOfWork);
 
       const response = await axios.post(
-        "http://localhost:3000/client-dash/submitProof",
+        "http://localhost:3000/client/submitProof",
         formData,
         {
           withCredentials: true,
@@ -95,7 +89,7 @@ export default function ClientWalkthrough() {
       );
 
       console.log(response.data);
-      navigate("/client-dashboard");
+      navigate("/client/dashboard");
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {

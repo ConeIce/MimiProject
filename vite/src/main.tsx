@@ -22,6 +22,7 @@ import ClientRegister from "./pages/Authentication/ClientAuth/ClientRegister.tsx
 import ClientWalkthrough from "./pages/Authentication/ClientAuth/ClientWalkthrough.tsx";
 import ApproveRequest from "./pages/AdminDashboard/ApproveRequest.tsx";
 import SettingsPage from "./pages/AdminDashboard/SettingsPage.tsx";
+import Shop from "./pages/AdminDashboard/Shop.tsx";
 
 const router = createBrowserRouter([
   {
@@ -49,70 +50,52 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "client-login",
+    path: "client/login",
     element: <ClientLogin />,
   },
 
   {
-    path: "client-register",
+    path: "client/register",
     element: <ClientRegister />,
   },
 
   {
-    path: "client-walkthrough",
+    path: "client/walkthrough",
     element: <ClientWalkthrough />,
   },
 
   {
-    path: "client-login",
-    element: <ClientLogin />,
-  },
-
-  {
-    path: "client-register",
-    element: <ClientRegister />,
-  },
-
-  {
-    path: "client-walkthrough",
-    element: <ClientWalkthrough />,
-  },
-
-  {
-    path: "admin-login",
+    path: "admin/login",
     element: <AdminLogin />,
   },
 
   {
-    path: "admin-register",
+    path: "admin/register",
     element: <AdminRegister />,
   },
 
   {
-    path: "admin-walkthrough",
+    path: "admin/walkthrough",
     element: <AdminWalkthrough />,
   },
 
   {
-    path: "add-shop",
-    element: <AddShop />,
-  },
-
-  {
-    path: "approve-request",
-    element: <ApproveRequest />,
-  },
-
-  {
-    path: "add-shop",
-    element: <AddShop />,
-  },
-
-  {
-    path: "/admin-dashboard",
+    path: "/admin/dashboard",
     element: <AdminDashboard />,
 
     children: [
+      {
+        path: "addShop",
+        element: <AddShop />,
+      },
+      {
+        path: "shop",
+        element: <Shop />,
+      },
+      {
+        path: "approveRequest",
+        element: <ApproveRequest />,
+      },
       {
         path: "print",
         element: <PrintQueue />,

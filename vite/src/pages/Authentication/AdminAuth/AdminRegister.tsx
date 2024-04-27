@@ -53,7 +53,7 @@ export default function AdminRegister() {
         description: `Welcome ${username}`,
       });
 
-      navigate("/admin-login");
+      navigate("/admin/login");
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {

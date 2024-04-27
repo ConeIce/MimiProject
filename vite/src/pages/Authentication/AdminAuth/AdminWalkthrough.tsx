@@ -28,12 +28,9 @@ export default function AdminWalkthrough() {
 
   const checkShopsExistence = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:3000/admin-dash/allshops",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get("http://localhost:3000/shop/all", {
+        withCredentials: true,
+      });
       console.log(response.data);
       if (response.data.length > 0) {
         setShopsExist(true);
@@ -48,7 +45,7 @@ export default function AdminWalkthrough() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/admin/shop",
+        "http://localhost:3000/admin/addShop",
         {
           shopName,
           shopLocation,
@@ -127,7 +124,7 @@ export default function AdminWalkthrough() {
       </div>
     );
   } else {
-    navigate("/admin-dashboard");
+    navigate("/admin/dashboard");
     return null;
   }
 }
