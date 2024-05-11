@@ -12,7 +12,7 @@ export default function Shop() {
   useEffect(() => {
     fetchShopDetails();
     fetchPendingRequests();
-    // fetchShopUsers();
+    fetchShopUsers();
   }, []);
 
   const handleApprove = async (userId, shopId) => {
@@ -34,6 +34,8 @@ export default function Shop() {
           ),
         };
       });
+
+      setShopUsers((prevShopUsers) => [...prevShopUsers, userId]);
     } catch (error) {
       console.error("Error approving user:", error);
     }
@@ -89,17 +91,18 @@ export default function Shop() {
     }
   };
 
-  //   const fetchShopUsers = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:3000/shop/shopUsers/${shopId}`,
-  //         { withCredentials: true }
-  //       );
-  //       setShopUsers(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching shop users:", error);
-  //     }
-  //   };
+  const fetchShopUsers = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/shop/users/${shopId}`,
+        { withCredentials: true }
+      );
+      setShopUsers(response.data);
+      console.log(shopUsers);
+    } catch (error) {
+      console.error("Error fetching shop users:", error);
+    }
+  };
 
   if (!shopDetails) {
     return <div>Loading...</div>;
@@ -155,16 +158,30 @@ export default function Shop() {
         </div>
 
         <h3 className="text-xl my-8">Shop Users</h3>
-        {/* <div className="flex flex-wrap gap-4 mt-3">
+        <div className="flex flex-wrap gap-4 mt-3">
           {shopUsers.map((user) => (
             <div
-              key={user.id}
-              className="bg-green-500 text-white px-4 py-2 rounded-md"
+              key={user.user_id}
+              className="bg-green-500 text-white p-4 rounded-md flex items-center"
             >
-              {user.name}
+              <img
+                src={user.personal_photo}
+                alt="Profile"
+                className="w-12 h-12 rounded-full mr-4"
+              />
+              <div>
+                <p className="font-semibold">{user.username}</p>
+                <p className="text-gray-300">{user.email}</p>
+              </div>
+              <button
+                onClick={() => handleDeleteUser(user.user_id)}
+                className="bg-red-500 text-white px-4 py-2 ml-auto rounded-md"
+              >
+                Delete
+              </button>
             </div>
           ))}
-        </div> */}
+        </div>
       </div>
     </div>
   );
