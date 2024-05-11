@@ -71,6 +71,30 @@ module.exports = {
     }
   },
 
+  getShopUsers: async (req, res) => {
+    const { shop_id } = req.params;
+    console.log(shop_id);
+
+    try {
+      const users = await db
+        .prepare(
+          `
+        SELECT users.username, users.email, UserShop.personal_photo
+        FROM users
+        INNER JOIN UserShop ON users.user_id = UserShop.user_id
+        WHERE UserShop.shop_id = ?
+      `
+        )
+        .all(shop_id);
+
+      console.log(users);
+      res.json(users);
+    } catch (error) {
+      console.error("Error retrieving shop users:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
   postShop: (req, res) => {
     const shopName = req.body.shopName;
     const ownerId = req.user.user_id;

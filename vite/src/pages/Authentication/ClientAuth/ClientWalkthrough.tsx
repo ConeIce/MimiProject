@@ -23,8 +23,37 @@ export default function ClientWalkthrough() {
   const [selectedShop, setSelectedShop] = useState("");
   const [personalPhoto, setPersonalPhoto] = useState(null);
   const [proofOfWork, setProofOfWork] = useState(null);
+  const [userStatus, setUserStatus] = useState(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchUserStatus = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/client/status",
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(response.data);
+        const { isNewUser } = response.data;
+        if (isNewUser !== 1) {
+          navigate("/client/dashboard");
+        }
+      } catch (error) {
+        console.error("Error fetching user status:", error);
+      }
+    };
+
+    fetchUserStatus();
+  }, []);
+
+  // useEffect(() => {
+  //   if (userStatus !== 1) {
+  //     navigate("/client/dashboard");
+  //   }
+  // }, [userStatus, navigate]);
 
   useEffect(() => {
     checkShopsExistence();

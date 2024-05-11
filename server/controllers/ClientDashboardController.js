@@ -41,4 +41,12 @@ module.exports = {
       res.status(500).json({ message: "Error submitting proof" });
     }
   },
+
+  userStatus: (req, res) => {
+    if (req.isAuthenticated()) {
+      res.json({ isNewUser: req.user.new });
+    } else {
+      res.status(401).json({ message: "User not authenticated" });
+    }
+  },
 };

@@ -64,7 +64,7 @@ export default function PrintPage() {
   useEffect(() => {
     async function fetchShops() {
       try {
-        const response = await axios.get("http://localhost:3000/dash/shops", {
+        const response = await axios.get("http://localhost:3000/shop/all", {
           withCredentials: true,
         });
 

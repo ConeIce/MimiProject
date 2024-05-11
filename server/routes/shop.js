@@ -19,6 +19,10 @@ router.get("/searchShop", (req, res) => {
   controller.searchShop(req, res);
 });
 
+router.get("/users/:shop_id", (req, res) => {
+  controller.getShopUsers(req, res);
+});
+
 router.post("/", (req, res) => {
   controller.postShop(req, res);
 });

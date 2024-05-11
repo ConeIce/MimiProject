@@ -16,11 +16,11 @@ import PrintQueue from "./pages/AdminDashboard/PrintQueue.tsx";
 import Dashboard from "./pages/AdminDashboard/Dashboard.tsx";
 import AdminRegister from "./pages/Authentication/AdminAuth/AdminRegister.tsx";
 import AdminWalkthrough from "./pages/Authentication/AdminAuth/AdminWalkthrough.tsx";
-import AddShop from "./pages/AdminDashboard/AddShop.tsx";
 import ClientLogin from "./pages/Authentication/ClientAuth/ClientLogin.tsx";
 import ClientRegister from "./pages/Authentication/ClientAuth/ClientRegister.tsx";
 import ClientWalkthrough from "./pages/Authentication/ClientAuth/ClientWalkthrough.tsx";
 import ApproveRequest from "./pages/AdminDashboard/ApproveRequest.tsx";
+import AddShop from "./pages/AdminDashboard/AddShop.tsx";
 import SettingsPage from "./pages/AdminDashboard/SettingsPage.tsx";
 import Shop from "./pages/AdminDashboard/Shop.tsx";
 
