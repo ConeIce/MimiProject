@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS pending (
 CREATE TABLE IF NOT EXISTS UserShop (
     user_id INTEGER,
     shop_id INTEGER,
+	personal_photo TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (shop_id) REFERENCES Shops(shop_id)
 );

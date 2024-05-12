@@ -14,4 +14,8 @@ router.post(
   }
 );
 
+router.get("/status", (req, res) => {
+  controller.userStatus(req, res);
+});
+
 module.exports = router;

@@ -13,7 +13,7 @@ export default function AddShop() {
   const handleAddShop = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/admin-dash/shop",
+        "http://localhost:3000/admin/addShop",
         {
           shopName,
           shopLocation,
@@ -23,7 +23,7 @@ export default function AddShop() {
         }
       );
       console.log("Shop added successfully");
-      navigate("/admin-dashboard");
+      navigate("/admin/dashboard");
     } catch (error) {
       console.error("Error adding shop:", error);
     }

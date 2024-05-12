@@ -103,6 +103,10 @@ module.exports = {
     const { user_id, shop_id } = req.body;
 
     try {
+      const { personal_photo } = db
+        .prepare("SELECT personal_photo FROM pending WHERE user_id = ?")
+        .get(user_id);
+
       const updateQuery = `
         UPDATE users
         SET new = 0
@@ -115,9 +119,9 @@ module.exports = {
       await db.prepare(deleteQuery).run(user_id);
 
       const insertQuery = `
-        INSERT INTO UserShop (user_id, shop_id)
-        VALUES (?, ?)`;
-      await db.prepare(insertQuery).run(user_id, shop_id);
+      INSERT INTO UserShop (user_id, shop_id, personal_photo)
+      VALUES (?, ?, ?)`;
+      await db.prepare(insertQuery).run(user_id, shop_id, personal_photo);
 
       res.status(200).json({ message: "User request approved successfully" });
     } catch (error) {
