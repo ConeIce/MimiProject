@@ -11,9 +11,9 @@ import LoginPage from "./pages/Authentication/LoginPage.tsx";
 import RegisterPage from "./pages/Authentication/RegisterPage.tsx";
 import AllPrintsPage from "./pages/Dashboard/AllPrintsPage.tsx";
 import AdminLogin from "./pages/Authentication/AdminAuth/AdminLogin.tsx";
-import AdminDashboard from "./pages/AdminDashboard/AdminDashboard.tsx";
-import PrintQueue from "./pages/AdminDashboard/PrintQueue.tsx";
-import Dashboard from "./pages/AdminDashboard/Dashboard.tsx";
+import AdminDashboard from "./pages/AdminDashboard/AdminDashboardPage.tsx";
+import PrintQueue from "./pages/ClientDashboard/PrintQueue.tsx";
+import Dashboard from "./pages/AdminDashboard/AdminDashboardDashboard.tsx";
 import AdminRegister from "./pages/Authentication/AdminAuth/AdminRegister.tsx";
 import AdminWalkthrough from "./pages/Authentication/AdminAuth/AdminWalkthrough.tsx";
 import ClientLogin from "./pages/Authentication/ClientAuth/ClientLogin.tsx";
@@ -21,8 +21,9 @@ import ClientRegister from "./pages/Authentication/ClientAuth/ClientRegister.tsx
 import ClientWalkthrough from "./pages/Authentication/ClientAuth/ClientWalkthrough.tsx";
 import ApproveRequest from "./pages/AdminDashboard/ApproveRequest.tsx";
 import AddShop from "./pages/AdminDashboard/AddShop.tsx";
-import SettingsPage from "./pages/AdminDashboard/SettingsPage.tsx";
+import SettingsPage from "./pages/ClientDashboard/SettingsPage.tsx";
 import Shop from "./pages/AdminDashboard/Shop.tsx";
+import ClientDashboard from "./pages/ClientDashboard/ClientDashboardPage.tsx";
 
 const router = createBrowserRouter([
   // End-user routes
@@ -65,6 +66,21 @@ const router = createBrowserRouter([
   },
 
   {
+    path: "client/dashboard",
+    element: <ClientDashboard />,
+    children: [
+      {
+        path: "print",
+        element: <PrintQueue />,
+      },
+      {
+        path: "settings",
+        element: <SettingsPage />,
+      },
+    ],
+  },
+
+  {
     path: "admin/login",
     element: <AdminLogin />,
   },
@@ -97,16 +113,8 @@ const router = createBrowserRouter([
         element: <ApproveRequest />,
       },
       {
-        path: "print",
-        element: <PrintQueue />,
-      },
-      {
         path: "",
         element: <Dashboard />,
-      },
-      {
-        path: "settings",
-        element: <SettingsPage />,
       },
     ],
   },
