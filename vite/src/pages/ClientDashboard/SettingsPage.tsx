@@ -46,9 +46,10 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const fetchShopData = async () => {
-      const response = await axios.get(`http://localhost:3000/admin/shop/`, {
+      const response = await axios.get(`http://localhost:3000/shop/`, {
         withCredentials: true,
       });
+      console.log(response.data);
       setShopName(response.data.shop_name);
       setLatLng({ lat: response.data.lat, lng: response.data.lng });
       setMarker({ lat: response.data.lat, lng: response.data.lng });

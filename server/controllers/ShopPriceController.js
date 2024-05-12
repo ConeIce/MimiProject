@@ -4,12 +4,12 @@ const db = new sqlite("./database.db");
 module.exports = {
   getShopPrices: (req, res) => {
     try {
-      const shops = db
+      const shopPrices = db
         .prepare(
-          "SELECT service_cost, a4_bw_cost, a4_color_cost, a3_bw_cost, a3_color_cost FROM shops"
+          "SELECT service_cost, a4_bw_cost, a4_color_cost, a3_bw_cost, a3_color_cost FROM shops WHERE user_id = ?"
         )
-        .all();
-      res.json(shops);
+        .all(req.user.user_id);
+      res.json(shopPrices);
     } catch (err) {
       console.error("Error retrieving shops:", err);
       res.status(500).json({ message: "Internal server error" });
@@ -17,8 +17,7 @@ module.exports = {
   },
 
   putShopPrices: (req, res) => {
-    console.log("here");
-    const userId = req?.user?.user_id || 1;
+    const userId = req.user.user_id;
 
     const updateStatement = db.prepare(
       "UPDATE shops SET service_cost = ?, a4_bw_cost = ?, a4_color_cost = ?, a3_bw_cost = ?, a3_color_cost = ? WHERE user_id = ?"

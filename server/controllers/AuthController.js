@@ -36,11 +36,9 @@ module.exports = {
     })(req, res, next);
   },
   register: async (req, res) => {
-    console.log(req.body);
-
     const { username, email, password } = req.body;
     const role = req.body.role || "user";
-    const fresh = req.body.new || 0;
+    const isNew = req.body.new || 0;
 
     if (!username || !email || !password) {
       return res.status(400).send("Username, email, and password are required");
@@ -91,7 +89,7 @@ module.exports = {
         email,
         hashedPassword,
         role,
-        fresh
+        isNew
       );
 
       if (result.changes === 1) {
