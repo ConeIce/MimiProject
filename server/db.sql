@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
 	username TEXT NOT NULL,
 	email TEXT UNIQUE,
 	password TEXT NOT NULL,
-	role TEXT NOT NULL, -- admin | user
+	role TEXT NOT NULL, -- admin | user | client
 	new BOOLEAN DEFAULT 0
 );
 
@@ -12,6 +12,12 @@ CREATE TABLE IF NOT EXISTS shops (
 	user_id INTEGER,
 	shop_name TEXT UNIQUE,
 	shop_location TEXT,
+
+	service_cost INTEGER,
+	a4_bw_cost INTEGER,
+	a4_color_cost INTEGER,
+	a3_bw_cost INTEGER,
+	a3_color_cost INTEGER,
 
 	lat NUMBER DEFAULT NULL,
 	lng NUMBER DEFAULT NULL,
@@ -67,8 +73,3 @@ CREATE TABLE IF NOT EXISTS UserShop (
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (shop_id) REFERENCES Shops(shop_id)
 );
-
-
-SELECT file_id, filename, shop_name from files
-JOIN shops ON files.shop_id = shops.shop_id
-WHERE files.user_id = 3;

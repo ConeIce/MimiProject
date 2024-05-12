@@ -25,6 +25,7 @@ import SettingsPage from "./pages/AdminDashboard/SettingsPage.tsx";
 import Shop from "./pages/AdminDashboard/Shop.tsx";
 
 const router = createBrowserRouter([
+  // End-user routes
   {
     path: "/",
     element: <LoginPage />,
@@ -53,7 +54,6 @@ const router = createBrowserRouter([
     path: "client/login",
     element: <ClientLogin />,
   },
-
   {
     path: "client/register",
     element: <ClientRegister />,

@@ -12,6 +12,7 @@ const DashboardRoute = require("./routes/dashboard.js");
 const AdminDashboardRoute = require("./routes/adminDashboard.js");
 const ClientDashboardRoute = require("./routes/clientDashboard.js");
 const ShopRoute = require("./routes/shop.js");
+const ShopPriceRoute = require("./routes/shopPrice.js");
 
 const passport = require("passport");
 const passportLocal = require("passport-local");
@@ -58,6 +59,7 @@ app.use("/dash", isLoggedIn, DashboardRoute);
 app.use("/client", isLoggedInAsClient, ClientDashboardRoute);
 app.use("/admin", isLoggedInAsAdmin, AdminDashboardRoute);
 app.use("/shop", ShopRoute);
+app.use("/shop/price", ShopPriceRoute);
 
 app.post("/forgot-password", (req, res) => {
   const { email } = req.body;
