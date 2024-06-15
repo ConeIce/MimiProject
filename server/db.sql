@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS shops (
 	shop_id INTEGER PRIMARY KEY AUTOINCREMENT,
-	shop_name TEXT UNIQUE,
+	shop_name TEXT UNIQUE NOT NULL,
 	shop_location TEXT,
 
 	service_cost INTEGER,
@@ -23,10 +23,12 @@ CREATE TABLE IF NOT EXISTS shops (
 );
 
 CREATE TABLE IF NOT EXISTS shop_staff (
-    user_id INTEGER,
-    shop_id INTEGER,
+    user_id INTEGER NOT NULL,
+    shop_id INTEGER NOT NULL,
 	personal_photo TEXT NOT NULL,
-	status TEXT, -- pending | approved
+	proof_of_work TEXT NOT NULL,
+	
+	status TEXT DEFAULT 'pending', -- pending | approved
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (shop_id) REFERENCES shops(shop_id)
 );
@@ -58,8 +60,7 @@ CREATE TABLE IF NOT EXISTS printers (
 
 CREATE TABLE IF NOT EXISTS routes (
     route_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    shop_id INTEGER,
+    shop_id INTEGER NOT NULL,
     route_link TEXT,
     FOREIGN KEY(shop_id) REFERENCES shops(shop_id)
 );
-

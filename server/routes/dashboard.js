@@ -7,4 +7,8 @@ router.post("/files", upload.single("file"), (req, res) => {
   controller.submitPrint(req, res);
 });
 
+router.get("/files", (req, res) => {
+  controller.getUserPrints(req, res);
+});
+
 module.exports = router;
