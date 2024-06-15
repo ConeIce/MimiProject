@@ -78,7 +78,7 @@ export default function AdminRegister() {
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Register</CardTitle>
-          <CardDescription>Register a new admin</CardDescription>
+          <CardDescription>Register a new admin - Top role</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent>
