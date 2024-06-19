@@ -22,4 +22,12 @@ router.post("/rejectClient", (req, res) => {
   controller.rejectRequest(req, res);
 });
 
+router.post("/deleteClient", (req, res) => {
+  controller.deleteClient(req, res);
+});
+
+router.delete("/deleteShop/:shop_id", (req, res) => {
+  controller.deleteShop(req, res);
+});
+
 module.exports = router;

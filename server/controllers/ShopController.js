@@ -79,7 +79,7 @@ module.exports = {
       const users = await db
         .prepare(
           `
-        SELECT users.username, users.email, UserShop.personal_photo
+        SELECT users.user_id, users.username, users.email, UserShop.personal_photo
         FROM users
         INNER JOIN UserShop ON users.user_id = UserShop.user_id
         WHERE UserShop.shop_id = ?
@@ -145,6 +145,55 @@ module.exports = {
     } catch (err) {
       console.log("Error updating shop location:", err);
       res.status(500).json({ message: "Error updating shop location" });
+    }
+  },
+
+  updateFileStatus: (req, res) => {
+    const { file_id, status } = req.body;
+
+    if (!file_id || !status) {
+      return res.status(400).json({
+        message: "File ID and new status are required",
+      });
+    }
+
+    const updateStmt = db.prepare(
+      "UPDATE files SET status = ? WHERE file_id = ?"
+    );
+
+    try {
+      const result = updateStmt.run(status, file_id);
+
+      if (result.changes === 1) {
+        console.log(`Status updated successfully for file ID ${file_id}`);
+        res.json({ message: "File status updated successfully" });
+      } else {
+        console.error("Failed to update file status");
+        res.status(500).json({ message: "Failed to update file status" });
+      }
+    } catch (err) {
+      console.error("Error updating file status:", err);
+      res.status(500).json({ message: "Error updating file status" });
+    }
+  },
+
+  getFileInfo: (req, res) => {
+    const fileId = req.params.file_id;
+    console.log("here");
+
+    const selectStatement = db.prepare("SELECT * FROM files WHERE file_id = ?");
+
+    try {
+      const fileInfo = selectStatement.get(fileId);
+
+      if (fileInfo) {
+        res.json(fileInfo);
+      } else {
+        res.status(404).json({ message: "File not found" });
+      }
+    } catch (err) {
+      console.log("Error retrieving file information:", err);
+      res.status(500).json({ message: "Error retrieving file information" });
     }
   },
 };

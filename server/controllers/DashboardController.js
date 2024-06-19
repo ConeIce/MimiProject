@@ -1,5 +1,7 @@
 const sqlite = require("better-sqlite3");
 const db = new sqlite("./database.db");
+const fs = require("fs");
+const path = require("path");
 
 module.exports = {
   submitPrint: (req, res) => {
@@ -33,9 +35,22 @@ module.exports = {
       );
 
       if (result.changes === 1) {
-        console.log(
-          `A row has been inserted with rowid ${result.lastInsertRowid}`
+        const fileId = result.lastInsertRowid;
+        const newFilename = `${fileId}-${shopId}_${file.originalname}`;
+
+        const updateFilenameStmt = db.prepare(
+          "UPDATE files SET filename = ? WHERE file_id = ?"
         );
+        updateFilenameStmt.run(newFilename, fileId);
+
+        const newPath = path.join("uploads", newFilename);
+        fs.renameSync(file.path, newPath);
+
+        console.log(`A row has been inserted with rowid ${fileId}`);
+
+        const finalUploadsPath = path.join("uploads_final", newFilename);
+        fs.renameSync(newPath, finalUploadsPath);
+
         res.json({ message: "File uploaded successfully" });
       } else {
         console.error("Failed to insert file");

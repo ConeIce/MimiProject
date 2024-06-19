@@ -31,4 +31,12 @@ router.put("/", (req, res) => {
   controller.putShop(req, res);
 });
 
+router.post("/update", (req, res) => {
+  controller.updateFileStatus(req, res);
+});
+
+router.get("/fileinfo/:file_id", (req, res) => {
+  controller.getFileInfo(req, res);
+});
+
 module.exports = router;

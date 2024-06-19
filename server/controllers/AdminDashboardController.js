@@ -144,4 +144,38 @@ module.exports = {
       res.status(500).json({ message: "Error rejecting user request" });
     }
   },
+
+  deleteClient: async (req, res) => {
+    const { user_id } = req.body;
+
+    try {
+      const deleteQuery = `
+        DELETE FROM users
+        WHERE user_id = ?`;
+
+      await db.prepare(deleteQuery).run(user_id);
+
+      res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      res.status(500).json({ message: "Error deleting user" });
+    }
+  },
+
+  deleteShop: async (req, res) => {
+    const { shop_id } = req.params;
+
+    try {
+      const deleteQuery = `
+            DELETE FROM shops
+            WHERE shop_id = ?`;
+
+      await db.prepare(deleteQuery).run(shop_id);
+
+      res.status(200).json({ message: "Shop deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting shop:", error);
+      res.status(500).json({ message: "Error deleting shop" });
+    }
+  },
 };
