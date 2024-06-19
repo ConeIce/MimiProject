@@ -65,3 +65,7 @@ CREATE TABLE IF NOT EXISTS routes (
     route_link TEXT,
     FOREIGN KEY(shop_id) REFERENCES shops(shop_id)
 );
+
+INSERT INTO users (username, email, password, role) VALUES ('admin1', 'asd@gmail.com', '123456*', 'admin');
+INSERT INTO users (username, email, password, role, new) VALUES ('client1', 'asd123@gmail.com', '123456*', 'client', 1);
+INSERT INTO users (username, email, password, role) VALUES ('user1', 'asd1232@gmail.com', '123456*', 'user');
