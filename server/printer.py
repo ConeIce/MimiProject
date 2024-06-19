@@ -25,14 +25,27 @@ def print_file(file_path, paper_size, orientation, copies, page_range):
             devmode.Orientation = 1 if orientation == 'portrait' else 2  # 1 = Portrait, 2 = Landscape
             devmode.Copies = copies
 
-            win32api.ShellExecute(
-                0,
-                "print",
-                file_path,
-                None,
-                ".",
-                0
-            )
+            if not page_range:
+                win32api.ShellExecute(
+                    0,
+                    "print",
+                    file_path,
+                    None,
+                    ".",
+                    0
+                )
+            else:
+                pages = parse_page_range(page_range)
+
+                for page in pages:
+                    win32api.ShellExecute(
+                        0,
+                        "print",
+                        file_path,
+                        f"/p:{page}",
+                        ".",
+                        0
+                    )
         finally:
             win32print.ClosePrinter(hprinter)
     except Exception as e:
@@ -44,6 +57,16 @@ def get_paper_size_code(paper_size):
         'A4': 9,  
     }
     return sizes.get(paper_size, 9)  # Default to A4
+
+def parse_page_range(page_range):
+    pages = set()
+    for part in page_range.split(','):
+        if '-' in part:
+            start, end = map(int, part.split('-'))
+            pages.update(range(start, end + 1))
+        else:
+            pages.add(int(part))
+    return sorted(pages)
 
 @app.route('/download', methods=['POST'])
 def download_file():

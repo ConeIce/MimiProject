@@ -62,21 +62,37 @@ module.exports = {
     }
   },
 
-  getUserPrints: (req, res) => {
+  getOngoingPrints: (req, res) => {
     const user = req.user;
+    const { page = 1, limit = 5 } = req.query;
 
-    const query = `
-      SELECT file_id, size, orientation, pageRange, copies, filename, status
-      FROM files
-      WHERE user_id = ?
-    `;
+    const offset = (page - 1) * limit;
 
     try {
-      const files = db.prepare(query).all(user.user_id);
-      res.json(files);
+      const countStmt = db.prepare(
+        "SELECT COUNT(*) as total FROM files WHERE user_id = ?"
+      );
+      const totalCount = countStmt.get(user.user_id).total;
+
+      const totalPages = Math.ceil(totalCount / limit);
+
+      const selectStmt = db.prepare(
+        "SELECT files.file_id, files.size, files.orientation, files.pageRange, files.copies, files.filename, files.status, shops.shop_name " +
+          "FROM files " +
+          "JOIN shops ON files.shop_id = shops.shop_id " +
+          "WHERE files.user_id = ? " +
+          "LIMIT ? OFFSET ?"
+      );
+      const files = selectStmt.all(user.user_id, limit, offset);
+
+      res.json({
+        files,
+        totalPages,
+        currentPage: parseInt(page),
+      });
     } catch (err) {
-      console.error("Error retrieving files:", err);
-      res.status(500).json({ message: "Internal server error" });
+      console.error("Error retrieving user files:", err);
+      res.status(500).json({ message: "Error retrieving user files" });
     }
   },
 };
