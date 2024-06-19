@@ -7,4 +7,8 @@ router.post("/files", upload.single("file"), (req, res) => {
   controller.submitPrint(req, res);
 });
 
+router.get("/ongoing", (req, res) => {
+  controller.getOngoingPrints(req, res);
+});
+
 module.exports = router;
