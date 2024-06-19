@@ -61,4 +61,22 @@ module.exports = {
       res.status(500).json({ message: "Error uploading file" });
     }
   },
+
+  getUserPrints: (req, res) => {
+    const user = req.user;
+
+    const query = `
+      SELECT file_id, size, orientation, pageRange, copies, filename, status
+      FROM files
+      WHERE user_id = ?
+    `;
+
+    try {
+      const files = db.prepare(query).all(user.user_id);
+      res.json(files);
+    } catch (err) {
+      console.error("Error retrieving files:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
 };

@@ -22,17 +22,6 @@ export default function Sidebar() {
           Dashboard
         </Button>
       </Link>
-
-      <h3 className="mb-3">Others</h3>
-
-      <Button variant="ghost" className="w-full mb-2 justify-start">
-        <Settings className="mr-2 h-4 w-4" />
-        Settings
-      </Button>
-      <Button variant="ghost" className="w-full mb-2 justify-start">
-        <User className="mr-2 h-4 w-4" />
-        Profile
-      </Button>
     </div>
   );
 }

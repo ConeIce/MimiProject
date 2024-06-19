@@ -103,7 +103,9 @@ export default function ClientLogin() {
           </CardContent>
           <CardFooter className="flex justify-between">
             <Link to="/client/register">
-              <Button variant="outline">Register new client</Button>
+              <Button type="button" variant="outline">
+                Register new client
+              </Button>
             </Link>
             <Button type="submit">Login</Button>
           </CardFooter>
