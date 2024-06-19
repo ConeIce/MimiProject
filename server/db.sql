@@ -22,17 +22,6 @@ CREATE TABLE IF NOT EXISTS shops (
 	lng NUMBER DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS shop_staff (
-    user_id INTEGER NOT NULL,
-    shop_id INTEGER NOT NULL,
-	personal_photo TEXT NOT NULL,
-	proof_of_work TEXT NOT NULL,
-	
-	status TEXT DEFAULT 'pending', -- pending | approved
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (shop_id) REFERENCES shops(shop_id)
-);
-
 CREATE TABLE IF NOT EXISTS files (
     file_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	user_id INTEGER NOT NULL,

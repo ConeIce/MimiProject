@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Shop() {
   const [shopDetails, setShopDetails] = useState(null);
@@ -8,6 +9,7 @@ export default function Shop() {
   const [shopUsers, setShopUsers] = useState([]);
   const location = useLocation();
   const shopId = new URLSearchParams(location.search).get("id");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchShopDetails();
@@ -62,6 +64,41 @@ export default function Shop() {
       });
     } catch (error) {
       console.error("Error rejecting user:", error);
+    }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/admin/deleteClient`,
+        { user_id: userId },
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        setShopUsers((prevShopUsers) =>
+          prevShopUsers.filter((user) => user.user_id !== userId)
+        );
+      } else {
+        console.error("Failed to delete user");
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
+
+  const handleDeleteShop = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/admin/deleteShop/${shopId}`,
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        navigate("/admin/dashboard");
+      } else {
+        console.error("Failed to delete shop");
+      }
+    } catch (error) {
+      console.error("Error deleting shop:", error);
     }
   };
 
@@ -181,6 +218,14 @@ export default function Shop() {
               </button>
             </div>
           ))}
+        </div>
+        <div className="mt-8">
+          <button
+            onClick={handleDeleteShop}
+            className="bg-red-500 text-white px-4 py-2 rounded-md"
+          >
+            Delete Shop
+          </button>
         </div>
       </div>
     </div>
