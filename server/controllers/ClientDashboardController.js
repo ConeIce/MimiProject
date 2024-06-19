@@ -16,7 +16,7 @@ module.exports = {
     }
 
     const insertStmt = db.prepare(
-      "INSERT INTO pending (user_id, shop_id, personal_photo, proof_of_work) VALUES (?, ?, ?, ?)"
+      "INSERT INTO shop_staff (user_id, shop_id, personal_photo, proof_of_work) VALUES (?, ?, ?, ?)"
     );
 
     try {

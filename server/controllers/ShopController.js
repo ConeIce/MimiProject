@@ -32,7 +32,9 @@ module.exports = {
   },
 
   getShop: (req, res) => {
+    console.log("here at getShop");
     const userId = req.user.user_id;
+    console.log(userId);
 
     try {
       const shop = db
@@ -41,7 +43,7 @@ module.exports = {
         )
         .get(userId);
 
-      console.log(shop);
+      console.log("Shop:", shop);
 
       if (!shop) {
         return res.status(404).json("Shop not found");

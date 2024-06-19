@@ -1,5 +1,4 @@
 const sqlite = require("better-sqlite3");
-const fs = require("fs");
 const db = new sqlite("./database.db");
 
 module.exports = {
@@ -10,11 +9,11 @@ module.exports = {
     console.log(ownerId);
 
     const insertStatement = db.prepare(
-      "INSERT INTO shops (user_id, shop_name, shop_location) VALUES (?, ?, ?)"
+      "INSERT INTO shops (shop_name, shop_location) VALUES (?, ?)"
     );
 
     try {
-      const result = insertStatement.run(ownerId, shopName, shopLocation);
+      const result = insertStatement.run(shopName, shopLocation);
       console.log(req.user);
     } catch (err) {
       console.error("Error creating shop:", err);

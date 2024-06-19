@@ -97,7 +97,9 @@ export default function LoginPage() {
           </CardContent>
           <CardFooter className="flex justify-between">
             <Link to="/register">
-              <Button variant="outline">Register new user</Button>
+              <Button type="button" variant="outline">
+                Register new user
+              </Button>
             </Link>
             <Button type="submit">Login</Button>
           </CardFooter>
