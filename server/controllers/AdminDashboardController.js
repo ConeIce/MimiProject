@@ -23,104 +23,51 @@ module.exports = {
     res.json("Admin Dashboard Route");
   },
 
-  pendingShops: async (req, res) => {
+  usersAwaitingApproval: async (req, res) => {
     try {
       const query = `
-        SELECT p.shop_id, s.shop_name
-        FROM pending p
-        JOIN shops s ON p.shop_id = s.shop_id
-        GROUP BY p.shop_id
-        LIMIT 5`;
+        SELECT users.user_id, users.username, shops.shop_name FROM shop_staff
+        JOIN users ON shop_staff.user_id = users.user_id
+        JOIN shops ON shop_staff.shop_id = shops.shop_id
+        WHERE shop_staff.status = 'pending'`;
 
       const result = await db.prepare(query).all();
 
       console.log(result);
       res.json(result);
     } catch (error) {
-      console.error("Error fetching pending shops:", error);
-      res.status(500).json({ message: "Error fetching pending shops" });
+      console.error("Error fetching pending users:", error);
+      res.status(500).json({ message: "Error fetching pending users" });
     }
   },
 
-  clientRequest: async (req, res) => {
+  usersAwaitingApprovalByShop: async (req, res) => {
     const { shop_id } = req.params;
-    console.log(shop_id);
-    console.log(req.params);
-    console.log("ehy");
 
     try {
-      const pendingQuery = `
-        SELECT user_id, shop_id, personal_photo, proof_of_work
-        FROM pending
-        WHERE shop_id = ?`;
+      const query = `
+        SELECT users.user_id, users.email, users.username, shops.shop_name, shop_staff.personal_photo FROM shop_staff
+        JOIN users ON shop_staff.user_id = users.user_id
+        JOIN shops ON shop_staff.shop_id = shops.shop_id
+        WHERE shop_staff.status = 'pending' AND shop_staff.shop_id = ?`;
 
-      const pendingData = await db.prepare(pendingQuery).all(shop_id);
-
-      if (!pendingData || pendingData.length === 0) {
-        return res.status(404).json({ message: "Pending shop not found" });
-      }
-
-      const userDetailsPromises = pendingData.map(async (pendingItem) => {
-        const userQuery = `
-          SELECT user_id, username, email
-          FROM users
-          WHERE user_id = ?`;
-
-        const userData = await db.prepare(userQuery).get(pendingItem.user_id);
-
-        return {
-          user_id: userData.user_id,
-          username: userData.username,
-          email: userData.email,
-          personal_photo: pendingItem.personal_photo,
-          proof_of_work: pendingItem.proof_of_work,
-        };
-      });
-
-      const userDetails = await Promise.all(userDetailsPromises);
-
-      const shopQuery = `
-        SELECT shop_name, shop_location
-        FROM shops
-        WHERE shop_id = ?`;
-
-      const shopData = await db.prepare(shopQuery).get(pendingData[0].shop_id);
-
-      res.json({
-        shop_name: shopData.shop_name,
-        shop_location: shopData.shop_location,
-        users: userDetails,
-      });
+      const result = await db.prepare(query).all(shop_id);
+      res.json(result);
     } catch (error) {
-      console.error("Error fetching pending shop:", error);
-      res.status(500).json({ message: "Error fetching pending shop" });
+      console.error("Error fetching pending users:", error);
+      res.status(500).json({ message: "Error fetching pending users" });
     }
   },
 
-  approveRequest: async (req, res) => {
-    console.log("hey");
+  approveClient: async (req, res) => {
     const { user_id, shop_id } = req.body;
 
     try {
-      const { personal_photo } = db
-        .prepare("SELECT personal_photo FROM pending WHERE user_id = ?")
-        .get(user_id);
-
       const updateQuery = `
-        UPDATE users
-        SET new = 0
+        UPDATE shop_staff
+        SET status = 'approved'
         WHERE user_id = ?`;
       await db.prepare(updateQuery).run(user_id);
-
-      const deleteQuery = `
-        DELETE FROM pending
-        WHERE user_id = ?`;
-      await db.prepare(deleteQuery).run(user_id);
-
-      const insertQuery = `
-      INSERT INTO UserShop (user_id, shop_id, personal_photo)
-      VALUES (?, ?, ?)`;
-      await db.prepare(insertQuery).run(user_id, shop_id, personal_photo);
 
       res.status(200).json({ message: "User request approved successfully" });
     } catch (error) {

@@ -6,7 +6,11 @@ module.exports = {
     try {
       const shopPrices = db
         .prepare(
-          "SELECT service_cost, a4_bw_cost, a4_color_cost, a3_bw_cost, a3_color_cost FROM shops WHERE user_id = ?"
+          `SELECT service_cost, a4_bw_cost, a4_color_cost, a3_bw_cost, a3_color_cost FROM shops WHERE shop_id = (
+        SELECT s.shop_id
+        FROM shops s
+        JOIN shop_staff ss ON s.shop_id = ss.shop_id
+        WHERE ss.user_id = ?)`
         )
         .all(req.user.user_id);
       res.json(shopPrices);
@@ -20,7 +24,11 @@ module.exports = {
     const userId = req.user.user_id;
 
     const updateStatement = db.prepare(
-      "UPDATE shops SET service_cost = ?, a4_bw_cost = ?, a4_color_cost = ?, a3_bw_cost = ?, a3_color_cost = ? WHERE user_id = ?"
+      `UPDATE shops SET service_cost = ?, a4_bw_cost = ?, a4_color_cost = ?, a3_bw_cost = ?, a3_color_cost = ? WHERE shop_id = (
+        SELECT s.shop_id
+        FROM shops s
+        JOIN shop_staff ss ON s.shop_id = ss.shop_id
+        WHERE ss.user_id = ?)`
     );
 
     try {

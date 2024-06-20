@@ -51,6 +51,21 @@ export default function SettingsPage() {
       });
       console.log(response.data);
       setShopName(response.data.shop_name);
+
+      const pResponse = await axios.get(`http://localhost:3000/shop/price`, {
+        withCredentials: true,
+      });
+
+      const pricingData = pResponse.data[0];
+
+      setPricing({
+        serviceCost: pricingData.service_cost,
+        a4Cost: pricingData.a4_bw_cost,
+        a4ColorCost: pricingData.a4_color_cost,
+        a3Cost: pricingData.a3_bw_cost,
+        a3ColorCost: pricingData.a3_color_cost,
+      });
+
       setLatLng({ lat: response.data.lat, lng: response.data.lng });
       setMarker({ lat: response.data.lat, lng: response.data.lng });
     };

@@ -2,10 +2,19 @@ import { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  Table,
+} from "@/components/ui/table";
 
 export default function Shop() {
   const [shopDetails, setShopDetails] = useState(null);
-  const [pendingRequests, setPendingRequests] = useState([]);
+  const [usersAwaitingApproval, setUsersAwaitingApproval] = useState([]);
   const [shopUsers, setShopUsers] = useState([]);
   const location = useLocation();
   const shopId = new URLSearchParams(location.search).get("id");
@@ -24,20 +33,16 @@ export default function Shop() {
         { user_id: userId, shop_id: shopId },
         { withCredentials: true }
       );
-      setPendingRequests((prevShopDetails) => {
-        if (!prevShopDetails.users || !Array.isArray(prevShopDetails.users)) {
-          return prevShopDetails;
-        }
-
-        return {
-          ...prevShopDetails,
-          users: prevShopDetails.users.filter(
-            (user) => user.user_id !== userId
-          ),
-        };
+      setUsersAwaitingApproval((prevShopDetails) => {
+        return prevShopDetails.filter((user) => user.user_id !== userId);
       });
 
-      setShopUsers((prevShopUsers) => [...prevShopUsers, userId]);
+      setShopUsers((prevShopUsers) => {
+        return [
+          ...prevShopUsers,
+          usersAwaitingApproval.find((user) => user.user_id === userId),
+        ];
+      });
     } catch (error) {
       console.error("Error approving user:", error);
     }
@@ -50,7 +55,7 @@ export default function Shop() {
         { user_id: userId },
         { withCredentials: true }
       );
-      setPendingRequests((prevShopDetails) => {
+      setUsersAwaitingApproval((prevShopDetails) => {
         if (!prevShopDetails.users || !Array.isArray(prevShopDetails.users)) {
           return prevShopDetails;
         }
@@ -116,13 +121,14 @@ export default function Shop() {
   };
 
   const fetchPendingRequests = async () => {
+    console.log("Hey there");
     try {
       const response = await axios.get(
-        `http://localhost:3000/admin/clientRequest/${shopId}`,
+        `http://localhost:3000/admin/pending/${shopId}`,
         { withCredentials: true }
       );
       console.log(response.data);
-      setPendingRequests(response.data);
+      setUsersAwaitingApproval(response.data);
     } catch (error) {
       console.error("Error fetching pending requests:", error);
     }
@@ -150,12 +156,11 @@ export default function Shop() {
       <div>
         <h2 className="text-2xl mb-4">{shopDetails.shop_name}</h2>
         <p className="text-lg mb-8">{shopDetails.shop_location}</p>
-
-        <h3 className="text-xl mb-4">Pending Requests</h3>
+        <h3 className="text-xl mb-4">Pending Requests</h3>{" "}
+        {!usersAwaitingApproval.length && "Wait for client requests to arrive"}
         <div className="grid grid-cols-2 gap-4">
-          {pendingRequests.users &&
-            pendingRequests.users.length > 0 &&
-            pendingRequests.users.map((user) => (
+          {usersAwaitingApproval &&
+            usersAwaitingApproval.map((user) => (
               <div
                 key={user.user_id}
                 className="bg-gray-100 p-4 rounded-md flex"
@@ -193,7 +198,6 @@ export default function Shop() {
               </div>
             ))}
         </div>
-
         <h3 className="text-xl my-8">Shop Users</h3>
         <div className="flex flex-wrap gap-4 mt-3">
           {shopUsers.map((user) => (
@@ -219,6 +223,30 @@ export default function Shop() {
             </div>
           ))}
         </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">User Id</TableHead>
+              <TableHead>Username</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {shopUsers.map((user) => (
+              <TableRow key={user.user_id}>
+                <TableCell className="font-medium">{user.user_id}</TableCell>
+                <TableCell className="font-medium">{user.username}</TableCell>
+                <TableCell className="font-medium">{user.email}</TableCell>
+                <TableCell>Approved</TableCell>
+                <TableCell>
+                  <Button className="mr-5">Delete user</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
         <div className="mt-8">
           <button
             onClick={handleDeleteShop}

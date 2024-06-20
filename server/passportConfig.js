@@ -30,8 +30,8 @@ module.exports = function (passport) {
           // This is a temporary solution to allow devs to login
           if (
             username === "admin1" ||
-            username === "client" ||
-            username === "user"
+            username === "client1" ||
+            username === "user1"
           ) {
             return done(null, user);
           }

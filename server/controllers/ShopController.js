@@ -39,7 +39,10 @@ module.exports = {
     try {
       const shop = db
         .prepare(
-          "SELECT shop_id, shop_name, lat, lng FROM shops WHERE user_id = ?"
+          `SELECT s.shop_id, s.shop_name, s.shop_location
+            FROM shops s
+            JOIN shop_staff ss ON s.shop_id = ss.shop_id
+            WHERE ss.user_id = ?`
         )
         .get(userId);
 
@@ -75,25 +78,19 @@ module.exports = {
 
   getShopUsers: async (req, res) => {
     const { shop_id } = req.params;
-    console.log(shop_id);
 
     try {
-      const users = await db
-        .prepare(
-          `
-        SELECT users.user_id, users.username, users.email, UserShop.personal_photo
-        FROM users
-        INNER JOIN UserShop ON users.user_id = UserShop.user_id
-        WHERE UserShop.shop_id = ?
-      `
-        )
-        .all(shop_id);
+      const query = `
+        SELECT users.user_id, users.email, users.username FROM shop_staff
+        JOIN users ON shop_staff.user_id = users.user_id
+        JOIN shops ON shop_staff.shop_id = shops.shop_id
+        WHERE shop_staff.status = 'approved' AND shop_staff.shop_id = ?`;
 
-      console.log(users);
-      res.json(users);
+      const result = await db.prepare(query).all(shop_id);
+      res.json(result);
     } catch (error) {
-      console.error("Error retrieving shop users:", error);
-      res.status(500).json({ message: "Internal server error" });
+      console.error("Error fetching pending users:", error);
+      res.status(500).json({ message: "Error fetching pending users" });
     }
   },
 

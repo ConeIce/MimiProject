@@ -2,16 +2,25 @@ import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  Table,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 export default function Dashboard() {
   const [shops, setShops] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [pendingShops, setPendingShops] = useState([]);
+  const [usersAwaitingApproval, setUsersAwaitingApproval] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchShops();
-    fetchPendingShops();
+    fetchUsersAwaitingApproval();
   }, []);
 
   const fetchShops = async () => {
@@ -29,16 +38,13 @@ export default function Dashboard() {
     }
   };
 
-  const fetchPendingShops = async () => {
+  const fetchUsersAwaitingApproval = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:3000/admin/pendingShops",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get("http://localhost:3000/admin/pending", {
+        withCredentials: true,
+      });
       console.log(response.data);
-      setPendingShops(response.data.slice(0, 5));
+      setUsersAwaitingApproval(response.data.slice(0, 5));
     } catch (error) {
       console.error("Error fetching pending shops:", error);
     }
@@ -89,9 +95,9 @@ export default function Dashboard() {
       <hr className="my-8 border-gray-300" />
 
       <div>
-        <h2 className="text-xl">Pending Approvals</h2>
+        <h2 className="text-xl">Clients awaiting approval</h2>
         <div className="flex flex-wrap gap-4 mt-3">
-          {pendingShops.map((shop) => (
+          {usersAwaitingApproval.map((shop) => (
             <button
               key={shop.shop_id}
               className="bg-yellow-500 text-white px-4 py-2 rounded-md"
@@ -102,6 +108,34 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
+
+      {!usersAwaitingApproval.length && "Wait for client requests to arrive"}
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">User Id</TableHead>
+            <TableHead>Username</TableHead>
+            <TableHead>Shop name</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {usersAwaitingApproval.map((user) => (
+            <TableRow key={user.user_id}>
+              <TableCell className="font-medium">{user.user_id}</TableCell>
+              <TableCell className="font-medium">{user.username}</TableCell>
+              <TableCell>{user.shop_name}</TableCell>
+              <TableCell>Approval Pending</TableCell>
+              <TableCell>
+                <Button className="mr-5">Approve</Button>
+                <Button className="bg-red-500">Reject</Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
       <hr className="my-8 border-gray-300" />
 

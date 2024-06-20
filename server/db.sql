@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS shop_staff (
 	proof_of_work TEXT NOT NULL,
 	
 	status TEXT DEFAULT 'pending', -- pending | approved
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (shop_id) REFERENCES shops(shop_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (shop_id) REFERENCES shops(shop_id) ON DELETE CASCADE
 );
 
 

@@ -6,16 +6,16 @@ router.post("/addShop", (req, res) => {
   controller.postShop(req, res);
 });
 
-router.get("/pendingShops", (req, res) => {
-  controller.pendingShops(req, res);
+router.get("/pending", (req, res) => {
+  controller.usersAwaitingApproval(req, res);
 });
 
-router.get("/clientRequest/:shop_id", (req, res) => {
-  controller.clientRequest(req, res);
+router.get("/pending/:shop_id", (req, res) => {
+  controller.usersAwaitingApprovalByShop(req, res);
 });
 
 router.post("/approveClient", (req, res) => {
-  controller.approveRequest(req, res);
+  controller.approveClient(req, res);
 });
 
 router.post("/rejectClient", (req, res) => {
