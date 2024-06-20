@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import {
   Select,
   SelectContent,
@@ -21,14 +23,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/TextLayer.css";
+
 import { getPagesFromRange } from "@/utils/getPagesFromRange";
 import { useEffect, useState } from "react";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -47,10 +54,11 @@ const FormSchema = z.object({
   copies: z.coerce.number().min(1),
 });
 
-let INITIAL_NUMBER_OF_PAGES;
+let INITIAL_NUMBER_OF_PAGES: number;
 
 export default function PrintPage() {
   const { toast } = useToast();
+
   const [shops, setShops] = useState([]);
 
   useEffect(() => {
@@ -59,16 +67,19 @@ export default function PrintPage() {
         const response = await axios.get("http://localhost:3000/shop/all", {
           withCredentials: true,
         });
+
         console.log(response.data);
+
         setShops(response.data);
       } catch (error) {
         console.error("Error fetching shops:", error);
       }
     }
+
     fetchShops();
   }, []);
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       paperSize: "A4",
@@ -77,12 +88,7 @@ export default function PrintPage() {
     },
   });
 
-  const validatePageRange = (value) => {
-    const regex = /^(\d+(-\d+)?)(,(\d+(-\d+)?))*$/;
-    return regex.test(value);
-  };
-
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<z.infer<typeof FormSchema>>({
     shopId: "",
     paperSize: "A4",
     orientation: "Portrait",
@@ -92,20 +98,16 @@ export default function PrintPage() {
     copies: 1,
   });
 
-  async function onSubmit(data) {
-    if (data.pageRange && !validatePageRange(data.pageRange)) {
-      toast({
-        title: "Invalid Page Range",
-        description: "Please enter a valid page range.",
-        status: "error",
-      });
-      return;
-    }
-
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     const formData = new FormData();
+
+    console.log(data);
+
     if (data.file) {
       formData.append("file", data.file);
     }
+
+    console.log(formData);
 
     formData.append("shopId", data.shopId);
     formData.append("paperSize", data.paperSize);
@@ -115,6 +117,7 @@ export default function PrintPage() {
     formData.append("copies", String(data.copies));
 
     try {
+      console.log("Sending form data:", formData);
       const response = await axios.post(
         "http://localhost:3000/dash/files",
         formData,
@@ -128,22 +131,19 @@ export default function PrintPage() {
         description: response.data.message,
       });
     } catch (error) {
-      console.error("Error sending form data:", error);
-      toast({
-        title: "Error",
-        description: "Failed to submit print job.",
-        status: "error",
-      });
+      console.error("Error sending form in:", error);
     }
   }
 
-  const [numPages, setNumPages] = useState();
-  const [currentPageNumber, setCurrentPageNumber] = useState(1);
-  const [secondPageNumber, setSecondPageNumber] = useState(2);
-  const [customPages, setCustomPages] = useState([]);
-  const [currIndex, setCurrIndex] = useState(0);
+  const [numPages, setNumPages] = useState<number>();
+  const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
+  const [secondPageNumber, setSecondPageNumber] = useState<number>(2);
 
-  function onDocumentLoadSuccess({ numPages }) {
+  const [customPages, setCustomPages] = useState<number[]>([]);
+
+  const [currIndex, setCurrIndex] = useState<number>(0);
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
     INITIAL_NUMBER_OF_PAGES = numPages;
     setNumPages(numPages);
   }
@@ -151,6 +151,7 @@ export default function PrintPage() {
   function handleNext() {
     if (customPages.length) {
       if (currIndex + 2 >= numPages) return;
+
       setCurrIndex((prev) => prev + 2);
     }
 
@@ -163,6 +164,7 @@ export default function PrintPage() {
   function handlePrev() {
     if (customPages.length) {
       if (currIndex - 2 < 0) return;
+
       setCurrIndex((prev) => prev - 2);
     }
 
@@ -172,13 +174,8 @@ export default function PrintPage() {
     setSecondPageNumber((prev) => prev - 2);
   }
 
-  function handlePageChange(event) {
-    const value = event.target.value;
-    if (value === "") {
-      setCustomPages([]);
-    } else if (validatePageRange(value)) {
-      setCustomPages(getPagesFromRange(value));
-    }
+  function handlePageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setCustomPages(getPagesFromRange(event.target.value));
   }
 
   useEffect(() => {
@@ -390,7 +387,7 @@ export default function PrintPage() {
       </div>
       <div className="p-8 border-l w-2/5">
         {!formData.file ? (
-          <div className="border-[1px] py-8 rounded-md drop-shadow-sm flex justify-center items-center flex-col">
+          <div className="border-[1px]  py-8 rounded-md drop-shadow-sm flex justify-center items-center flex-col">
             <h2 className="text-center text-xl font-semibold mb-4">
               Print Preview
             </h2>
@@ -405,6 +402,7 @@ export default function PrintPage() {
               onLoadSuccess={onDocumentLoadSuccess}
             >
               <div className="flex justify-center items-center">
+                {" "}
                 <Button variant="ghost" onClick={handlePrev}>
                   <ChevronLeft className="" />
                 </Button>
