@@ -4,19 +4,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function AddShop() {
   const [shopName, setShopName] = useState("");
   const [shopLocation, setShopLocation] = useState("");
+  const [shopEmail, setShopEmail] = useState("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleAddShop = async () => {
     try {
-      await axios.post(
+      const response = await axios.post(
         "http://localhost:3000/admin/addShop",
         {
           shopName,
           shopLocation,
+          shopEmail,
         },
         {
           withCredentials: true,
@@ -24,8 +28,18 @@ export default function AddShop() {
       );
       console.log("Shop added successfully");
       navigate("/admin/dashboard");
+      toast({
+        title: "Shop Added",
+        description: "Shop has been added successfully",
+        status: "success",
+      });
     } catch (error) {
       console.error("Error adding shop:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add shop. Please try again later.",
+        status: "error",
+      });
     }
   };
 
@@ -52,6 +66,17 @@ export default function AddShop() {
           onChange={(e) => setShopLocation(e.target.value)}
           className="mt-3"
           placeholder="Enter shop location"
+        />
+      </div>
+
+      <div className="mb-6">
+        <Label>Shop Email</Label>
+        <Input
+          type="email"
+          value={shopEmail}
+          onChange={(e) => setShopEmail(e.target.value)}
+          className="mt-3"
+          placeholder="Enter shop email"
         />
       </div>
 

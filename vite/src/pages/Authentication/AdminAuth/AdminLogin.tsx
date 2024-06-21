@@ -18,6 +18,7 @@ import { Label } from "@radix-ui/react-label";
 export default function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const { toast } = useToast();
@@ -39,7 +40,7 @@ export default function AdminLogin() {
       );
       console.log(response.data);
 
-      navigate("/admin/walkthrough");
+      navigate("/admin/dashboard");
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
@@ -85,14 +86,23 @@ export default function AdminLogin() {
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="framework">Password</Label>
-                <Input
-                  placeholder="Your password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <Label htmlFor="password">Password</Label>
+                <div className="relative">
+                  <Input
+                    placeholder="Your password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 px-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
               </div>
             </div>
           </CardContent>

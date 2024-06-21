@@ -9,8 +9,9 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS shops (
 	shop_id INTEGER PRIMARY KEY AUTOINCREMENT,
-	shop_name TEXT UNIQUE NOT NULL,
+	shop_name TEXT NOT NULL,
 	shop_location TEXT,
+	secret TEXT,
 
 	service_cost INTEGER,
 	a4_bw_cost INTEGER,
@@ -25,8 +26,6 @@ CREATE TABLE IF NOT EXISTS shops (
 CREATE TABLE IF NOT EXISTS shop_staff (
     user_id INTEGER NOT NULL,
     shop_id INTEGER NOT NULL,
-	personal_photo TEXT NOT NULL,
-	proof_of_work TEXT NOT NULL,
 	
 	status TEXT DEFAULT 'pending', -- pending | approved
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,

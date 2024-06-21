@@ -195,4 +195,82 @@ module.exports = {
       res.status(500).json({ message: "Error retrieving file information" });
     }
   },
+
+  verifySecret: async (req, res) => {
+    const { clientSecret } = req.params;
+    console.log("verify");
+
+    try {
+      const query = `
+      SELECT shop_id
+      FROM shops
+      WHERE secret = ?`;
+
+      const shop = await db.prepare(query).get(clientSecret);
+
+      if (!shop) {
+        res.status(404).json({ message: "Shop not found" });
+      } else {
+        res.status(200).json(shop);
+      }
+    } catch (error) {
+      console.error("Error retrieving shop:", error);
+      res.status(500).json({ message: "Error retrieving shop" });
+    }
+  },
+
+  shopIdFromUser: async (req, res) => {
+    const user_id = req.user.user_id;
+
+    try {
+      const shopIdQuery = `
+        SELECT shop_id
+        FROM shop_staff
+        WHERE user_id = ?`;
+      const shop = await db.prepare(shopIdQuery).get(user_id);
+
+      if (!shop) {
+        return res
+          .status(404)
+          .json({ message: "Shop not found for this user" });
+      }
+
+      res.status(200).json({ shop_id: shop.shop_id });
+    } catch (error) {
+      console.error("Error fetching shop id:", error);
+      res.status(500).json({ message: "Error fetching shop id" });
+    }
+  },
+
+  ongoingPrints: async (req, res) => {
+    const shop_id = req.params.shopId;
+    const page = req.query.page || 1;
+    const perPage = 5;
+
+    try {
+      const countQuery = `
+        SELECT COUNT(*) AS total
+        FROM files
+        WHERE shop_id = ? AND printStatus = 'Pending'`;
+      const totalCount = await db.prepare(countQuery).get(shop_id);
+
+      const totalPages = Math.ceil(totalCount.total / perPage);
+
+      const printsQuery = `
+        SELECT *
+        FROM files
+        WHERE shop_id = ? AND printStatus = 'Pending'
+        ORDER BY printId
+        LIMIT ?
+        OFFSET ?`;
+      const prints = await db
+        .prepare(printsQuery)
+        .all(shop_id, perPage, (page - 1) * perPage);
+
+      res.status(200).json({ prints, totalPages });
+    } catch (error) {
+      console.error("Error fetching pending prints:", error);
+      res.status(500).json({ message: "Error fetching pending prints" });
+    }
+  },
 };

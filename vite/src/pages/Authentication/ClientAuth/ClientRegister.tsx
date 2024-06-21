@@ -19,7 +19,9 @@ export default function ClientRegister() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [clientSecret, setClientSecret] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const { toast } = useToast();
@@ -27,7 +29,15 @@ export default function ClientRegister() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (clientSecret !== "sambar") {
+    if (password !== confirmPassword) {
+      toast({
+        title: "Passwords do not match",
+        description: "Please make sure your passwords match.",
+      });
+      return;
+    }
+
+    if (!clientSecret) {
       toast({
         title: "Invalid client secret",
         description:
@@ -37,13 +47,27 @@ export default function ClientRegister() {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/auth/register",
+      const response = await axios.get(
+        `http://localhost:3000/shop/secret/${clientSecret}`
+      );
+
+      if (!response.data) {
+        toast({
+          title: "Invalid client secret",
+          description:
+            "The client secret provided does not match any registered shop.",
+        });
+        return;
+      }
+
+      const registerResponse = await axios.post(
+        "http://localhost:3000/auth/registerClient",
         {
           username,
           email,
           password,
           role: "client",
+          clientSecret,
           new: 1,
         },
         { withCredentials: true }
@@ -106,11 +130,31 @@ export default function ClientRegister() {
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="framework">Password</Label>
+                <div className="relative">
+                  <Input
+                    placeholder="Your password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 px-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="framework">Confirm Password</Label>
                 <Input
-                  placeholder="Your password"
+                  placeholder="Confirm your password"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onPaste={(e) => e.preventDefault()}
                   required
                 />
               </div>

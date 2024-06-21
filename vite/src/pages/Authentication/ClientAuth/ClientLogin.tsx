@@ -38,7 +38,7 @@ export default function ClientLogin() {
       );
 
       if (response.data.role === "client") {
-        navigate("/client/walkthrough");
+        navigate("/client/dashboard");
       } else {
         toast({
           title: "Unauthorized",

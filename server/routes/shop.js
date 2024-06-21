@@ -39,4 +39,16 @@ router.get("/fileinfo/:file_id", (req, res) => {
   controller.getFileInfo(req, res);
 });
 
+router.get("/secret/:clientSecret", (req, res) => {
+  controller.verifySecret(req, res);
+});
+
+router.get("/shopId", (req, res) => {
+  controller.shopIdFromUser(req, res);
+});
+
+router.get("/prints/:shopId", (req, res) => {
+  controller.ongoingPrints(req, res);
+});
+
 module.exports = router;

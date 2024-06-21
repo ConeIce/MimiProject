@@ -15,12 +15,12 @@ import { Button } from "@/components/ui/button";
 export default function Dashboard() {
   const [shops, setShops] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [usersAwaitingApproval, setUsersAwaitingApproval] = useState([]);
+  // const [usersAwaitingApproval, setUsersAwaitingApproval] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchShops();
-    fetchUsersAwaitingApproval();
+    // fetchUsersAwaitingApproval();
   }, []);
 
   const fetchShops = async () => {
@@ -38,17 +38,17 @@ export default function Dashboard() {
     }
   };
 
-  const fetchUsersAwaitingApproval = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/admin/pending", {
-        withCredentials: true,
-      });
-      console.log(response.data);
-      setUsersAwaitingApproval(response.data.slice(0, 5));
-    } catch (error) {
-      console.error("Error fetching pending shops:", error);
-    }
-  };
+  // const fetchUsersAwaitingApproval = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:3000/admin/pending", {
+  //       withCredentials: true,
+  //     });
+  //     console.log(response.data);
+  //     setUsersAwaitingApproval(response.data.slice(0, 5));
+  //   } catch (error) {
+  //     console.error("Error fetching pending shops:", error);
+  //   }
+  // };
 
   const handleAddShop = () => {
     navigate("/admin/dashboard/addShop");
@@ -58,9 +58,9 @@ export default function Dashboard() {
     fetchShops();
   };
 
-  const handleSelectShop = (id) => {
-    navigate(`/admin/dashboard/shop?id=${id}`);
-  };
+  // const handleSelectShop = (id) => {
+  //   navigate(`/admin/dashboard/shop?id=${id}`);
+  // };
 
   return (
     <div className="p-10 px-16 w-full">
@@ -92,9 +92,9 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <hr className="my-8 border-gray-300" />
+      {/* <hr className="my-8 border-gray-300" /> */}
 
-      <div>
+      {/* <div>
         <h2 className="text-xl">Clients awaiting approval</h2>
         <div className="flex flex-wrap gap-4 mt-3">
           {usersAwaitingApproval.map((shop) => (
@@ -109,9 +109,9 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {!usersAwaitingApproval.length && "Wait for client requests to arrive"}
+      {!usersAwaitingApproval.length && "Wait for client requests to arrive"} */}
 
-      <Table>
+      {/* <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">User Id</TableHead>
@@ -121,8 +121,8 @@ export default function Dashboard() {
             <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {usersAwaitingApproval.map((user) => (
+        <TableBody> */}
+      {/* {usersAwaitingApproval.map((user) => (
             <TableRow key={user.user_id}>
               <TableCell className="font-medium">{user.user_id}</TableCell>
               <TableCell className="font-medium">{user.username}</TableCell>
@@ -133,9 +133,9 @@ export default function Dashboard() {
                 <Button className="bg-red-500">Reject</Button>
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          ))} */}
+      {/* </TableBody>
+      </Table> */}
 
       <hr className="my-8 border-gray-300" />
 
@@ -146,7 +146,9 @@ export default function Dashboard() {
             <button
               key={shop.shop_id}
               className="bg-indigo-500 text-white px-4 py-2 rounded-md mr-4 mb-4"
-              onClick={() => handleSelectShop(shop.shop_id)}
+              onClick={() =>
+                navigate(`/admin/dashboard/shop?id=${shop.shop_id}`)
+              }
             >
               {shop.shop_name}
             </button>
